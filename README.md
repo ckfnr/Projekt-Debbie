@@ -1,2 +1,2 @@
 Dieses Projekt ist in Arbeit!
-Dateien werden regelmäßig geändert!
+Dateien werden regelmäßig geupdated!
