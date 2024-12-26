@@ -20,10 +20,10 @@ class Config:
         self.max_lower_leg_angle_lf: int = 130  # Lower leg left front
         self.max_lower_leg_angle_lb: int = 130  # Lower leg left back
         # Min values
-        self.min_lower_leg_angle_rf: int = 60  # Lower leg right front
-        self.min_lower_leg_angle_rb: int = 60  # Lower leg right back
-        self.min_lower_leg_angle_lf: int = 60  # Lower leg left front
-        self.min_lower_leg_angle_lb: int = 60  # Lower leg left back
+        self.min_lower_leg_angle_rf: int = 60   # Lower leg right front
+        self.min_lower_leg_angle_rb: int = 60   # Lower leg right back
+        self.min_lower_leg_angle_lf: int = 60   # Lower leg left front
+        self.min_lower_leg_angle_lb: int = 60   # Lower leg left back
 
 
         # Side axis left
@@ -40,22 +40,22 @@ class Config:
 
 
         # Servo general (default)
-        self.servo_channel_count: int = 16
-        self.servo_normal_position: int = 90
-        self.servo_default_steps: int = 5
+        self.servo_channel_count: int = 16    # Channels of the servo controller
+        self.servo_normal_position: int = 90  # Normal position of all servos
+        self.servo_default_steps: int = 5     # Number of steps during movement (MUSTN'T BE 0!!!)
 
 
         # Set up channels
         # Right front
-        self.servo_channel_RFT: int = 1  # Thigh
-        self.servo_channel_RFL: int = 2  # Lower leg
-        self.servo_channel_RFS: int = 3  # Side axis
+        self.servo_channel_RFT: int = 1   # Thigh
+        self.servo_channel_RFL: int = 2   # Lower leg
+        self.servo_channel_RFS: int = 3   # Side axis
         # Right back
-        self.servo_channel_RBT: int = 5  # Thigh
-        self.servo_channel_RBL: int = 6  # Lower leg
-        self.servo_channel_RBS: int = 7  # Side axis
+        self.servo_channel_RBT: int = 5   # Thigh
+        self.servo_channel_RBL: int = 6   # Lower leg
+        self.servo_channel_RBS: int = 7   # Side axis
         # Left front
-        self.servo_channel_LFT: int = 9  # Thigh
+        self.servo_channel_LFT: int = 9   # Thigh
         self.servo_channel_LFL: int = 10  # Lower leg
         self.servo_channel_LFS: int = 11  # Side axis
         # Left back

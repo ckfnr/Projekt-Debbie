@@ -12,16 +12,28 @@ class SingleServo:
         if not 0 <= servo_channel <= config.servo_channel_count: raise ValueError(f"Servo channel must be between or equal to 0-{config.servo_channel_count}!")
         self.single_kit: Servo = servo_kit.servo[servo_channel]
 
-    def move(self, actual_angle: int, target_angle: int, duration: float) -> None:
-        def movement(actual_angle: int, target_angle: int, duration: float) -> None:
+    def move(self, actual_angle: int, target_angle: int, duration_s: float) -> None:
+        def movement(actual_angle: int, target_angle: int, duration_s: float) -> None:
             # Calculate steps
             step_difference: int = (target_angle - actual_angle) // config.servo_default_steps
-            while target_angle > actual_angle:
-                actual_angle += step_difference
-                self.single_kit.angle = actual_angle
-                time.sleep(duration / config.servo_default_steps)
 
-        threading.Thread(target=movement, args=(actual_angle, target_angle, duration), daemon=True).start()
+            # Move to target angle in steps
+            if target_angle > actual_angle:
+                while target_angle > actual_angle:
+                    actual_angle += step_difference                      # Calculate new angle
+                    self.single_kit.angle = actual_angle                 # Move to angle
+                    time.sleep(duration_s / config.servo_default_steps)  # Sleep
+            elif target_angle < actual_angle:
+                while target_angle < actual_angle:
+                    actual_angle -= step_difference                      # Calculate new angle
+                    self.single_kit.angle = actual_angle                 # Move to angle
+                    time.sleep(duration_s / config.servo_default_steps)  # Sleep
+
+            # Move to target angle finally
+            self.single_kit.angle = target_angle
+
+        # Start movement in a new thread that DEBBIE is able to move multiple servos at a time
+        threading.Thread(target=movement, args=(actual_angle, target_angle, duration_s), daemon=True).start()
 
 class RightFront:
     def __init__(self) -> None:
@@ -40,22 +52,22 @@ class RightFront:
         self.move_lower_leg(config.servo_normal_position, 10)
         self.move_side_axis(config.servo_normal_position, 10)
 
-    def move_thigh(self, value: int, duration: float) -> None:
+    def move_thigh(self, value: int, duration_s: float) -> None:
         if not config.min_thigh_angle_rf <= value <= config.max_thigh_angle_rf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rf}-{config.max_thigh_angle_rf}!")
         new_angle: int = value + config.servo_deviation_thigh_rf  # Set the new servo value
-        self.servo_thigh.move(self.thigh, new_angle, duration)
+        self.servo_thigh.move(self.thigh, new_angle, duration_s)
         self.thigh = new_angle
     
-    def move_lower_leg(self, value: int, duration: float) -> None:
+    def move_lower_leg(self, value: int, duration_s: float) -> None:
         if not config.min_lower_leg_angle_rf <= value <= config.max_lower_leg_angle_rf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rf}-{config.max_thigh_angle_rf}!")
         new_angle: int = value + config.servo_deviation_lower_leg_rf  # Set the new servo value
-        self.servo_lower_leg.move(self.lower_leg, new_angle, duration)
+        self.servo_lower_leg.move(self.lower_leg, new_angle, duration_s)
         self.lower_leg = new_angle
     
-    def move_side_axis(self, value: int, duration: float) -> None:
+    def move_side_axis(self, value: int, duration_s: float) -> None:
         if not config.min_side_axis_angle_rf <= value <= config.max_side_axis_angle_rf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rf}-{config.max_thigh_angle_rf}!")
         new_angle: int = value + config.servo_deviation_side_axis_rf  # Set the new servo value
-        self.servo_side_axis.move(self.side_axis, new_angle, duration)
+        self.servo_side_axis.move(self.side_axis, new_angle, duration_s)
         self.side_axis = new_angle
 
 class RightBack:
@@ -75,22 +87,22 @@ class RightBack:
         self.move_lower_leg(config.servo_normal_position, 10)
         self.move_side_axis(config.servo_normal_position, 10)
 
-    def move_thigh(self, value: int, duration: float) -> None:
+    def move_thigh(self, value: int, duration_s: float) -> None:
         if not config.min_thigh_angle_rb <= value <= config.max_thigh_angle_rb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rb}-{config.max_thigh_angle_rb}!")
         new_angle: int = value + config.servo_deviation_thigh_rb  # Set the new servo value
-        self.servo_thigh.move(self.thigh, new_angle, duration)
+        self.servo_thigh.move(self.thigh, new_angle, duration_s)
         self.thigh = new_angle
     
-    def move_lower_leg(self, value: int, duration: float) -> None:
+    def move_lower_leg(self, value: int, duration_s: float) -> None:
         if not config.min_lower_leg_angle_rb <= value <= config.max_lower_leg_angle_rb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rb}-{config.max_thigh_angle_rb}!")
         new_angle: int = value + config.servo_deviation_lower_leg_rb  # Set the new servo value
-        self.servo_lower_leg.move(self.lower_leg, new_angle, duration)
+        self.servo_lower_leg.move(self.lower_leg, new_angle, duration_s)
         self.lower_leg = new_angle
     
-    def move_side_axis(self, value: int, duration: float) -> None:
+    def move_side_axis(self, value: int, duration_s: float) -> None:
         if not config.min_side_axis_angle_rb <= value <= config.max_side_axis_angle_rb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_rb}-{config.max_thigh_angle_rb}!")
         new_angle: int = value + config.servo_deviation_side_axis_rb  # Set the new servo value
-        self.servo_side_axis.move(self.side_axis, new_angle, duration)
+        self.servo_side_axis.move(self.side_axis, new_angle, duration_s)
         self.side_axis = new_angle
 
 class LeftFront:
@@ -110,22 +122,22 @@ class LeftFront:
         self.move_lower_leg(config.servo_normal_position, 10)
         self.move_side_axis(config.servo_normal_position, 10)
 
-    def move_thigh(self, value: int, duration: float) -> None:
+    def move_thigh(self, value: int, duration_s: float) -> None:
         if not config.min_thigh_angle_lf <= value <= config.max_thigh_angle_lf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lf}-{config.max_thigh_angle_lf}!")
         new_angle: int = value + config.servo_deviation_thigh_lf  # Set the new servo value
-        self.servo_thigh.move(self.thigh, new_angle, duration)
+        self.servo_thigh.move(self.thigh, new_angle, duration_s)
         self.thigh = new_angle
     
-    def move_lower_leg(self, value: int, duration: float) -> None:
+    def move_lower_leg(self, value: int, duration_s: float) -> None:
         if not config.min_lower_leg_angle_lf <= value <= config.max_lower_leg_angle_lf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lf}-{config.max_thigh_angle_lf}!")
         new_angle: int = value + config.servo_deviation_lower_leg_lf  # Set the new servo value
-        self.servo_lower_leg.move(self.lower_leg, new_angle, duration)
+        self.servo_lower_leg.move(self.lower_leg, new_angle, duration_s)
         self.lower_leg = new_angle
     
-    def move_side_axis(self, value: int, duration: float) -> None:
+    def move_side_axis(self, value: int, duration_s: float) -> None:
         if not config.min_side_axis_angle_lf <= value <= config.max_side_axis_angle_lf: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lf}-{config.max_thigh_angle_lf}!")
         new_angle: int = value + config.servo_deviation_side_axis_lf  # Set the new servo value
-        self.servo_side_axis.move(self.side_axis, new_angle, duration)
+        self.servo_side_axis.move(self.side_axis, new_angle, duration_s)
         self.side_axis = new_angle
 
 class LeftBack:
@@ -145,22 +157,22 @@ class LeftBack:
         self.move_lower_leg(config.servo_normal_position, 10)
         self.move_side_axis(config.servo_normal_position, 10)
 
-    def move_thigh(self, value: int, duration: float) -> None:
+    def move_thigh(self, value: int, duration_s: float) -> None:
         if not config.min_thigh_angle_lb <= value <= config.max_thigh_angle_lb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lb}-{config.max_thigh_angle_lb}!")
         new_angle: int = value + config.servo_deviation_thigh_lb  # Set the new servo value
-        self.servo_thigh.move(self.thigh, new_angle, duration)
+        self.servo_thigh.move(self.thigh, new_angle, duration_s)
         self.thigh = new_angle
     
-    def move_lower_leg(self, value: int, duration: float) -> None:
+    def move_lower_leg(self, value: int, duration_s: float) -> None:
         if not config.min_lower_leg_angle_lb <= value <= config.max_lower_leg_angle_lb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lb}-{config.max_thigh_angle_lb}!")
         new_angle: int = value + config.servo_deviation_lower_leg_lb  # Set the new servo value
-        self.servo_lower_leg.move(self.lower_leg, new_angle, duration)
+        self.servo_lower_leg.move(self.lower_leg, new_angle, duration_s)
         self.lower_leg = new_angle
     
-    def move_side_axis(self, value: int, duration: float) -> None:
+    def move_side_axis(self, value: int, duration_s: float) -> None:
         if not config.min_side_axis_angle_lb <= value <= config.max_side_axis_angle_lb: raise ValueError(f"Value must be between or equal to {config.min_thigh_angle_lb}-{config.max_thigh_angle_lb}!")
         new_angle: int = value + config.servo_deviation_side_axis_lb  # Set the new servo value
-        self.servo_side_axis.move(self.side_axis, new_angle, duration)
+        self.servo_side_axis.move(self.side_axis, new_angle, duration_s)
         self.side_axis = new_angle
 
 class Movement:
@@ -179,17 +191,17 @@ class Movement:
             servo.move_to_normal_position()
         print("Done!")
 
-    def walk_forward(self) -> None:
+    def walk_forward(self, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
     
-    def walk_sideways(self) -> None:
+    def walk_sideways(self, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
     
-    def walk_back(self) -> None:
+    def walk_back(self, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
     
-    def turn_around(self) -> None:
+    def turn_around(self, angle: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
     
-    def climb_stair(self) -> None:
+    def climb_stair(self, stair_height_cm: float, stair_width_cm: float, stair_count: int, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
