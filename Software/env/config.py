@@ -47,21 +47,21 @@ class Config:
 
         # Set up channels
         # Right front
-        self.servo_channel_RFT: int = 1   # Thigh
-        self.servo_channel_RFL: int = 2   # Lower leg
-        self.servo_channel_RFS: int = 3   # Side axis
+        self.servo_channel_RFT: int = 0   # Thigh
+        self.servo_channel_RFL: int = 1   # Lower leg
+        self.servo_channel_RFS: int = 2   # Side axis
         # Right back
-        self.servo_channel_RBT: int = 5   # Thigh
-        self.servo_channel_RBL: int = 6   # Lower leg
-        self.servo_channel_RBS: int = 7   # Side axis
+        self.servo_channel_RBT: int = 4   # Thigh
+        self.servo_channel_RBL: int = 5   # Lower leg
+        self.servo_channel_RBS: int = 6   # Side axis
         # Left front
-        self.servo_channel_LFT: int = 9   # Thigh
-        self.servo_channel_LFL: int = 10  # Lower leg
-        self.servo_channel_LFS: int = 11  # Side axis
+        self.servo_channel_LFT: int = 8   # Thigh
+        self.servo_channel_LFL: int = 9  # Lower leg
+        self.servo_channel_LFS: int = 10  # Side axis
         # Left back
-        self.servo_channel_LBT: int = 13  # Thigh
-        self.servo_channel_LBL: int = 14  # Lower leg
-        self.servo_channel_LBS: int = 15  # Side axis
+        self.servo_channel_LBT: int = 12  # Thigh
+        self.servo_channel_LBL: int = 13  # Lower leg
+        self.servo_channel_LBS: int = 14  # Side axis
 
 
         # Servo deviations
