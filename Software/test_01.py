@@ -1,5 +1,5 @@
-from env.func.Classes import Movement
+from env.func.movement import Movement
 
 movement = Movement()
 
-movement.walk_forward(100, 10)
+movement.servo_right_back.move_thigh(80, 20)
