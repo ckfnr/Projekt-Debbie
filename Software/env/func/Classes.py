@@ -174,8 +174,10 @@ class Movement:
         self.all_servos: tuple[RightFront, RightBack, LeftFront, LeftBack] = (self.servo_right_front, self.servo_right_back, self.servo_left_front, self.servo_left_back)
     
         # Move all servos to their normal position
+        print("Moving servos to normal position...")
         for servo in self.all_servos:
             servo.move_to_normal_position()
+        print("Done!")
 
     def walk_forward(self) -> None:
         raise NotImplementedError("This function is not implemented yet!")
