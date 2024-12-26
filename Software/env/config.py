@@ -50,14 +50,14 @@ class Config:
         self.servo_channel_RFT: int = 0   # Thigh
         self.servo_channel_RFL: int = 1   # Lower leg
         self.servo_channel_RFS: int = 2   # Side axis
-        # Right back
-        self.servo_channel_RBT: int = 4   # Thigh
-        self.servo_channel_RBL: int = 5   # Lower leg
-        self.servo_channel_RBS: int = 6   # Side axis
         # Left front
-        self.servo_channel_LFT: int = 8   # Thigh
-        self.servo_channel_LFL: int = 9  # Lower leg
-        self.servo_channel_LFS: int = 10  # Side axis
+        self.servo_channel_LFT: int = 4   # Thigh
+        self.servo_channel_LFL: int = 5  # Lower leg
+        self.servo_channel_LFS: int = 6  # Side axis
+        # Right back
+        self.servo_channel_RBT: int = 8   # Thigh
+        self.servo_channel_RBL: int = 9   # Lower leg
+        self.servo_channel_RBS: int = 10   # Side axis
         # Left back
         self.servo_channel_LBT: int = 12  # Thigh
         self.servo_channel_LBL: int = 13  # Lower leg
