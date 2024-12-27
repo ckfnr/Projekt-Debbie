@@ -43,7 +43,7 @@ class ServoManager:
         if config.servo_default_steps <= 0:
             raise ValueError("config.servo_default_steps must be greater than zero!")
 
-        self.servo: Servo = servo_kit[servo_channel]
+        self.servo: Servo = servo_kit.servo[servo_channel]
         self.min_angle: int = min_angle
         self.max_angle: int = max_angle
         self.deviation: int = deviation
@@ -62,19 +62,22 @@ class ServoManager:
         """
         if not self.min_angle <= target_angle <= self.max_angle:
             raise ValueError(f"Target angle {target_angle} is out of range [{self.min_angle}, {self.max_angle}]")
-        
+
         adjusted_target: int = target_angle + self.deviation
         step_difference: float = (adjusted_target - self.calculation_angle) / config.servo_default_steps
 
         def move_to_target() -> None:
             with self.lock:
                 while abs(adjusted_target - self.calculation_angle) >= config.servo_stopping_treshhold:
+                    if not self.min_angle <= self.calculation_angle + step_difference <= self.max_angle:
+                        print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
+                        break
                     self.calculation_angle += step_difference
                     self.servo.angle = round(self.calculation_angle)
                     time.sleep(duration / config.servo_default_steps)
-                self.calculation_angle = target_angle
+                self.calculation_angle = adjusted_target
                 self.servo.angle = self.calculation_angle
-        
+
         moving_thread: threading.Thread = threading.Thread(target=move_to_target, daemon=True)
         moving_thread.start()
         return moving_thread
