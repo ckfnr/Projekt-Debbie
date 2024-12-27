@@ -44,8 +44,8 @@ class ServoManager:
             raise ValueError("config.servo_default_steps must be greater than zero!")
 
         self.servo: Servo = servo_kit.servo[servo_channel]
-        self.min_angle: int = min_angle
-        self.max_angle: int = max_angle
+        self.min_angle: int = min_angle + deviation
+        self.max_angle: int = max_angle + deviation
         self.deviation: int = deviation
         self.normal_position: int = config.servo_normal_position + deviation
         self.calculation_angle: float = self.normal_position

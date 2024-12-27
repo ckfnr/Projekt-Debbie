@@ -3,7 +3,7 @@ class Config:
         # Servo general (default)
         self.servo_channel_count: int = 16              # Channels of the servo controller
         self.servo_normal_position: int = 90            # Normal position of all servos
-        self.servo_default_steps: int = 100            # Number of steps during movement (MUSTN'T BE 0!!! --> Otherwise will raise DevisionError) A high amount will make the movement smoother
+        self.servo_default_steps: int = 100             # Number of steps during movement (MUSTN'T BE 0!!! --> Otherwise will raise DevisionError) A high amount will make the movement smoother
         self.servo_default_normalize_speed: float = 5   # How many seconds the servos should need to normalize their position
         self.auto_normalize_at_startup: bool = True     # If DEBBIE will normalize its servos at startup
         self.servo_stopping_treshhold: float = 0.1      # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
@@ -25,8 +25,8 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 0,
-                "lower_leg": 0,
+                "thigh": -3,
+                "lower_leg": -25,
                 "side_axis": 0,
             }
         }
@@ -45,8 +45,8 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 0,
-                "lower_leg": 0,
+                "thigh": -10,
+                "lower_leg": -3,
                 "side_axis": 0,
             }
         }
@@ -65,7 +65,7 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 0,
+                "thigh": 10,
                 "lower_leg": 0,
                 "side_axis": 0,
             }
@@ -85,8 +85,8 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 0,
-                "lower_leg": 0,
+                "thigh": 15,
+                "lower_leg": 10,
                 "side_axis": 10,
             }
         }
