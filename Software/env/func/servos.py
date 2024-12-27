@@ -28,7 +28,6 @@ def _validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) ->
         if missing_keys:
             raise ValueError(f"'{key}' is missing required keys: {missing_keys}.")
 
-
 class ServoManager:
     """
     Manages a single servo's movement and state.
@@ -95,7 +94,6 @@ class ServoManager:
         :return (int): The current angle of the servo.
         """
         return self.servo.angle
-
 
 class Leg:
     """
