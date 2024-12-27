@@ -12,16 +12,16 @@ class Movement:
         self.leg_left_front: Leg = Leg(config.leg_configuration_lf)
         self.leg_left_back: Leg = Leg(config.leg_configuration_lb)
 
-        # Define a tuple for easier access to all feet at once
-        self.all_servos: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
+        # Define a tuple for easier access to all legs at once
+        self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
 
         # Auto normalize
-        if config.auto_normalize_at_startup: self.normalize_servos()
+        if config.auto_normalize_at_startup: self.normalize_legs()
 
-    def normalize_servos(self, duration_s: float = config.servo_default_normalize_speed) -> None:
+    def normalize_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
         print("Moving servos to normal position...")
-        for servo in self.all_servos:
-            servo.move_to_normal_position()
+        for leg in self.all_legs:
+            leg.move_to_normal_position()
         time.sleep(duration_s)
         print("Done!")
 

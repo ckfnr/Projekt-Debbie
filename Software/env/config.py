@@ -4,7 +4,7 @@ class Config:
         self.servo_channel_count: int = 16              # Channels of the servo controller
         self.servo_normal_position: int = 90            # Normal position of all servos
         self.servo_default_steps: int = 10              # Number of steps during movement (MUSTN'T BE 0!!! --> Otherwise will raise DevisionError) A high amount will make the movement smoother
-        self.servo_default_normalize_speed: float = 10  # How many seconds the servos should need to normalize their position
+        self.servo_default_normalize_speed: float = 5   # How many seconds the servos should need to normalize their position
         self.auto_normalize_at_startup: bool = True     # If DEBBIE will normalize its servos at startup
         self.servo_stopping_treshhold: float = 0.1      # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
 
