@@ -39,3 +39,6 @@ class Movement:
 
     def climb_stair(self, *, stair_height_cm: float, stair_width_cm: float, stair_count: int, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
+
+    def lift_body(self, *, floor_distance_cm: float, duration_s: float) -> None:
+        raise NotImplementedError("This function is not implemented yet!")
