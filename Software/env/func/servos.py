@@ -1,4 +1,4 @@
-# Do not use this script! It will be changed in the next 24 hours
+# Do not use this script! It will be changed within the next 24 hours
 
 import time
 import threading
