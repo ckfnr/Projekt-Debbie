@@ -1,4 +1,4 @@
-import smbus 
+import smbus   #type:ignore
 from time import sleep
 
 # MPU6050 Registers and their Address
@@ -27,9 +27,9 @@ def read_raw_data(addr: int) -> int:
     """Reads raw 16-bit data from the MPU6050 sensor."""
     high = bus.read_byte_data(Device_Address, addr)
     low = bus.read_byte_data(Device_Address, addr + 1)
-    
+
     value = (high << 8) | low  # Combine high and low byte
-    
+
     # Convert to signed value
     if value > 32768:
         value -= 65536
@@ -54,6 +54,6 @@ while True:
     angle_z: float = Az * 90  # The accelerometer value on the Y-axis corresponds to an angle (e.g., -90 to 90 degrees)
 
     # Print the calculated angle
-    print(f"Angle-Y: {angle_y:.2f}  Angle-X: {angle_x:.2f}  Angle-Z: {angle_z:.2f}")
+    print(f"Angle-Y: {angle_y:.2f}  Angle-X: {angle_x:.2f}  Angle-Z: {angle_z:.2f}", end="                     \r")
     
     sleep(0.1)  # Delay to make the output readable
