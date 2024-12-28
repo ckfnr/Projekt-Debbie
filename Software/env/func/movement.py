@@ -1,4 +1,5 @@
 import time
+import threading
 from env.func.servos import Leg
 
 # Config
@@ -16,13 +17,20 @@ class Movement:
         self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
 
         # Auto normalize
-        if config.auto_normalize_at_startup: self.normalize_legs()
+        if config.auto_normalize_at_startup: self.normalize_all_legs()
 
-    def normalize_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
+    def normalize_all_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
+        leg_threads: list[threading.Thread] = []
         print("Moving servos to normal position...")
+
+        # Start moving all servos to their normal position
         for leg in self.all_legs:
-            leg.move_to_normal_position()
-        time.sleep(duration_s)
+            leg_threads.extend(i for i in leg._move_to_nm_position(duration_s))
+
+        # Wait for all threads to finish
+        for thread in leg_threads:
+            thread.join()
+
         print("Done!")
 
     def walk_forward(self, *, distance_cm: float, duration_s: float) -> None:

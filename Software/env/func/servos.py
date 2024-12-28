@@ -21,6 +21,7 @@ def _validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) ->
     :param dictionary (dict[str, Any]): The dictionary to validate.
     :raises ValueError: If any required key or subkey is missing.
     """
+    # Check all keys
     for key, subkeys in required_keys.items():
         if key not in dictionary or not isinstance(dictionary[key], dict):
             raise ValueError(f"'{key}' must be a dictionary containing {subkeys}.")
@@ -38,9 +39,10 @@ class ServoManager:
     :param deviation (int): Offset to apply to the servo's normal position.
     """
     def __init__(self, servo_channel: int, min_angle: int, max_angle: int, deviation: int) -> None:
+        # Check if all values are valid
         if not 0 <= servo_channel <= config.servo_channel_count - 1:
             raise ValueError(f"Servo channel must be between 0 and {config.servo_channel_count - 1}!")
-        if config.servo_default_steps <= 0:
+        elif config.servo_default_steps <= 0:
             raise ValueError("config.servo_default_steps must be greater than zero!")
 
         self.servo: Servo = servo_kit.servo[servo_channel]
@@ -60,6 +62,7 @@ class ServoManager:
         :return (threading.Thread): The thread executing the movement.
         :raises ValueError: If the target angle is outside the valid range.
         """
+        # Check if angle is valid
         if not self.min_angle <= target_angle <= self.max_angle:
             raise ValueError(f"Target angle {target_angle} is out of range [{self.min_angle}, {self.max_angle}]")
 
@@ -67,16 +70,21 @@ class ServoManager:
         step_difference: float = (adjusted_target - self.calculation_angle) / config.servo_default_steps
 
         def move_to_target() -> None:
+            valid_anlge: bool = True
             with self.lock:
                 while abs(adjusted_target - self.calculation_angle) >= config.servo_stopping_treshhold:
                     if not self.min_angle <= self.calculation_angle + step_difference <= self.max_angle:
                         print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
+                        valid_anlge = False
                         break
                     self.calculation_angle += step_difference
                     self.servo.angle = round(self.calculation_angle)
                     time.sleep(duration / config.servo_default_steps)
-                self.calculation_angle = adjusted_target
-                self.servo.angle = self.calculation_angle
+                # Move to target angle
+                if valid_anlge:
+                    self.calculation_angle = adjusted_target
+                    self.servo.angle = self.calculation_angle
+                valid_anlge = True
 
         moving_thread: threading.Thread = threading.Thread(target=move_to_target, daemon=True)
         moving_thread.start()
@@ -113,35 +121,34 @@ class Leg:
         _validate_dict(self.required_keys, leg_configurations)
 
         self.thigh: ServoManager = ServoManager(
-            servo_channel=leg_configurations["channels"]["thigh"],
-            min_angle=leg_configurations["angles"]["min_thigh"],
-            max_angle=leg_configurations["angles"]["max_thigh"],
-            deviation=leg_configurations["deviations"]["thigh"],
+            servo_channel = leg_configurations["channels"]["thigh"],
+            min_angle =     leg_configurations["angles"]["min_thigh"],
+            max_angle =     leg_configurations["angles"]["max_thigh"],
+            deviation =     leg_configurations["deviations"]["thigh"],
         )
         self.lower_leg: ServoManager = ServoManager(
-            servo_channel=leg_configurations["channels"]["lower_leg"],
-            min_angle=leg_configurations["angles"]["min_lower_leg"],
-            max_angle=leg_configurations["angles"]["max_lower_leg"],
-            deviation=leg_configurations["deviations"]["lower_leg"],
+            servo_channel = leg_configurations["channels"]["lower_leg"],
+            min_angle =     leg_configurations["angles"]["min_lower_leg"],
+            max_angle =     leg_configurations["angles"]["max_lower_leg"],
+            deviation =     leg_configurations["deviations"]["lower_leg"],
         )
         self.side_axis: ServoManager = ServoManager(
-            servo_channel=leg_configurations["channels"]["side_axis"],
-            min_angle=leg_configurations["angles"]["min_side_axis"],
-            max_angle=leg_configurations["angles"]["max_side_axis"],
-            deviation=leg_configurations["deviations"]["side_axis"],
+            servo_channel = leg_configurations["channels"]["side_axis"],
+            min_angle =     leg_configurations["angles"]["min_side_axis"],
+            max_angle =     leg_configurations["angles"]["max_side_axis"],
+            deviation =     leg_configurations["deviations"]["side_axis"],
         )
+
+    def _move_to_nm_position(self, duration_s: float) -> tuple[threading.Thread, threading.Thread, threading.Thread]:
+        return self.thigh.move_to_normal(duration_s), self.lower_leg.move_to_normal(duration_s), self.side_axis.move_to_normal(duration_s)
 
     def move_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
         """
-        Moves all servos in the leg to their normal (default) positions. (Default = servo_default_normalize_speed)
+        Moves all servos in the leg to their normal (default) positions. Waits until all servos have finished. (Default = servo_default_normalize_speed)
 
         :return (None): This function does not return a value.
         """
-        thigh_thread: threading.Thread = self.thigh.move_to_normal(duration_s)
-        lower_leg_thread: threading.Thread = self.lower_leg.move_to_normal(duration_s)
-        side_axis_thread: threading.Thread = self.side_axis.move_to_normal(duration_s)
-
-        for thread in [thigh_thread, lower_leg_thread, side_axis_thread]:
+        for thread in self._move_to_nm_position(duration_s):
             try:
                 thread.join()
             except Exception as e:
