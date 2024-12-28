@@ -75,9 +75,10 @@ class ServoManager:
             with self.lock:
                 while abs(adjusted_target - self.calculation_angle) >= config.servo_stopping_treshhold:
                     if not self.min_angle <= self.calculation_angle + step_difference <= self.max_angle:
-                        print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
-                        valid_anlge = False
-                        break
+                        if not (abs(self.min_angle - self.calculation_angle) > 1 or abs(self.max_angle - self.calculation_angle) > 1):
+                            print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
+                            valid_anlge = False
+                            break
                     self.calculation_angle += step_difference
                     self.servo.angle = round(self.calculation_angle)
                     time.sleep(duration / config.servo_default_steps)
