@@ -42,8 +42,6 @@ class ServoManager:
         # Check if all values are valid
         if not 0 <= servo_channel <= config.servo_channel_count - 1:
             raise ValueError(f"Servo channel must be between 0 and {config.servo_channel_count - 1}!")
-        elif config.servo_default_steps <= 0:
-            raise ValueError("config.servo_default_steps must be greater than zero!")
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.min_angle: int = min_angle + deviation
@@ -64,7 +62,10 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         adjusted_target: int = target_angle + self.deviation
-        step_difference: float = (adjusted_target - self.calculation_angle) / config.servo_default_steps
+
+        steps: int = abs(target_angle - self.servo.angle)
+        # total_steps: int = max(int(duration * 100), config.servo_default_steps)
+        step_difference: float = (adjusted_target - self.calculation_angle) / steps
 
         # Check if angle is valid
         if not self.min_angle <= adjusted_target <= self.max_angle:
@@ -81,7 +82,7 @@ class ServoManager:
                             break
                     self.calculation_angle += step_difference
                     self.servo.angle = round(self.calculation_angle)
-                    time.sleep(duration / config.servo_default_steps)
+                    time.sleep(duration / steps)
                 # Move to target angle
                 if valid_anlge:
                     self.calculation_angle = adjusted_target
