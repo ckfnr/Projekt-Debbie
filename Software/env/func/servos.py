@@ -62,12 +62,13 @@ class ServoManager:
         :return (threading.Thread): The thread executing the movement.
         :raises ValueError: If the target angle is outside the valid range.
         """
-        # Check if angle is valid
-        if not self.min_angle <= target_angle <= self.max_angle:
-            raise ValueError(f"Target angle {target_angle} is out of range [{self.min_angle}, {self.max_angle}]")
-
+        # Adjust target angle and calculate the step difference
         adjusted_target: int = target_angle + self.deviation
         step_difference: float = (adjusted_target - self.calculation_angle) / config.servo_default_steps
+
+        # Check if angle is valid
+        if not self.min_angle <= adjusted_target <= self.max_angle:
+            raise ValueError(f"Target angle {adjusted_target} is out of range [{self.min_angle}, {self.max_angle}]")
 
         def move_to_target() -> None:
             valid_anlge: bool = True
