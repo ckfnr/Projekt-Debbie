@@ -67,7 +67,7 @@ class Config:
             "deviations": {
                 "thigh": 10,
                 "lower_leg": 0,
-                "side_axis": 0,
+                "side_axis": -2,
             }
         }
         self.leg_configuration_lb: dict[str, dict[str, int]] = {

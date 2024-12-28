@@ -1,0 +1,2 @@
+class ProgrammingError(Exception):
+    pass

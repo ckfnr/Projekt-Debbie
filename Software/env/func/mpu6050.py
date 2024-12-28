@@ -1,5 +1,8 @@
 import smbus  #type:ignore
 
+# Errors
+from env.func.Errors import ProgrammingError
+
 # Config
 from env.config import config
 
@@ -49,7 +52,8 @@ class Gyro:
     def get_accel_data(self, axis: str) -> float:
         """Gets the acceleration data from the MPU6050 sensor."""
         if axis == 'x':
-            return self.read_raw_data(self.ACCEL_XOUT) / 16384.0 * 90 + self.deviation_x
+            # return self.read_raw_data(self.ACCEL_XOUT) / 16384.0 * 90 + self.deviation_x
+            raise ProgrammingError("Bad decision: (axis = x)  |  Use 'y' or 'z' instead.")
         elif axis == 'y':
             return self.read_raw_data(self.ACCEL_YOUT) / 16384.0 * 90 + self.deviation_y
         elif axis == 'z':
