@@ -13,24 +13,22 @@ ACCEL_ZOUT = 0x3F
 
 # Initialize I2C bus
 bus = smbus.SMBus(1)
-Device_Address = 0x68 # MPU6050 device address
+Device_Address = 0x68  # MPU6050 device address
 
-def MPU_Init():
-    # Wake up the MPU6050 as it starts in sleep mode
-    bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
-    # Configure the device
+def MPU_Init() -> None:
+    """Initializes the MPU6050 sensor."""
+    bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)  # Wake up MPU6050
     bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
     bus.write_byte_data(Device_Address, CONFIG, 0)
     bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
     bus.write_byte_data(Device_Address, INT_ENABLE, 1)
 
-def read_raw_data(addr):
-    # Read high and low byte of data
+def read_raw_data(addr: int) -> int:
+    """Reads raw 16-bit data from the MPU6050 sensor."""
     high = bus.read_byte_data(Device_Address, addr)
     low = bus.read_byte_data(Device_Address, addr + 1)
     
-    # Combine high and low byte
-    value = (high << 8) | low
+    value = (high << 8) | low  # Combine high and low byte
     
     # Convert to signed value
     if value > 32768:
@@ -46,14 +44,16 @@ while True:
     acc_z = read_raw_data(ACCEL_ZOUT)
 
     # Convert to G values
-    Ax = acc_x / 16384.0
-    Ay = acc_y / 16384.0
-    Az = acc_z / 16384.0
+    Ax: float = acc_x / 16384.0
+    Ay: float = acc_y / 16384.0
+    Az: float = acc_z / 16384.0
 
     # Calculate the angle (in degrees) using the accelerometer's Y-axis data
-    angle_y = (Ay * 90)  # The accelerometer value on the Y-axis corresponds to an angle (e.g., -90 to 90 degrees)
+    angle_y: float = Ay * 90  # The accelerometer value on the Y-axis corresponds to an angle (e.g., -90 to 90 degrees)
+    angle_x: float = Ax * 90  # The accelerometer value on the Y-axis corresponds to an angle (e.g., -90 to 90 degrees)
+    angle_z: float = Az * 90  # The accelerometer value on the Y-axis corresponds to an angle (e.g., -90 to 90 degrees)
 
     # Print the calculated angle
-    print("Angle (Y-axis): %.2f degrees" % angle_y)
+    print(f"Angle-Y: {angle_y:.2f}  Angle-X: {angle_x:.2f}  Angle-Z: {angle_z:.2f}")
     
     sleep(0.1)  # Delay to make the output readable
