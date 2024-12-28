@@ -19,7 +19,7 @@ class Config:
             "angles": {
                 "min_thigh": 40,
                 "max_thigh": 120,
-                "min_lower_leg": 60,
+                "min_lower_leg": 80,
                 "max_lower_leg": 130,
                 "min_side_axis": 15,
                 "max_side_axis": 90,
@@ -39,7 +39,7 @@ class Config:
             "angles": {
                 "min_thigh": 40,
                 "max_thigh": 120,
-                "min_lower_leg": 60,
+                "min_lower_leg": 80,
                 "max_lower_leg": 130,
                 "min_side_axis": 15,
                 "max_side_axis": 90,
@@ -59,7 +59,7 @@ class Config:
             "angles": {
                 "min_thigh": 40,
                 "max_thigh": 120,
-                "min_lower_leg": 60,
+                "min_lower_leg": 80,
                 "max_lower_leg": 130,
                 "min_side_axis": 15,
                 "max_side_axis": 90,
@@ -79,7 +79,7 @@ class Config:
             "angles": {
                 "min_thigh": 40,
                 "max_thigh": 120,
-                "min_lower_leg": 60,
+                "min_lower_leg": 80,
                 "max_lower_leg": 130,
                 "min_side_axis": 15,
                 "max_side_axis": 90,
