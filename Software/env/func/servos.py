@@ -68,7 +68,7 @@ class ServoManager:
 
         # Check if angle is valid
         if not self.min_angle <= adjusted_target <= self.max_angle:
-            raise ValueError(f"Target angle {adjusted_target} is out of range [{self.min_angle}, {self.max_angle}]")
+            raise ValueError(f"Adjusted target angle {adjusted_target} is out of range [{self.min_angle}, {self.max_angle}]")
 
         def move_to_target() -> None:
             valid_anlge: bool = True
