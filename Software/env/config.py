@@ -92,8 +92,8 @@ class Config:
         }
 
         # Gyroscope general (default)
-        self.deviation_x: float = 0
-        self.deviation_y: float = 0
-        self.deviation_z: float = 0
+        self.deviation_x: float = -103.3
+        self.deviation_y: float = 1.6
+        self.deviation_z: float = -2.1
 
 config = Config()
