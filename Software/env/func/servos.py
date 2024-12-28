@@ -51,7 +51,7 @@ class ServoManager:
         self.calculation_angle: float = self.normal_position
         self.lock: threading.Lock = threading.Lock()
 
-    def move(self, target_angle: int, duration: float) -> threading.Thread:
+    def move(self, target_angle: int, duration: float, nm_action: bool = False) -> threading.Thread:
         """
         Moves the servo to a target angle over a specified duration.
 
@@ -62,9 +62,14 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         adjusted_target: int = target_angle + self.deviation
+        steps: int
 
-        steps: int = abs(target_angle - self.servo.angle)
-        # total_steps: int = max(int(duration * 100), config.servo_default_steps)
+        # Define steps
+        if nm_action:
+            steps = 50
+        else:
+            steps = abs(target_angle - self.servo.angle)
+
         step_difference: float = (adjusted_target - self.calculation_angle) / steps
 
         # Check if angle is valid
