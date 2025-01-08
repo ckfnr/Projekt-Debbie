@@ -59,4 +59,4 @@ class Gyro:
         elif axis == 'z':
             return self.read_raw_data(self.ACCEL_ZOUT) / 16384.0 * 90 + self.deviation_z
         else:
-            raise ValueError(f"Axis '{axis}' does not exist! Use 'x', 'y', or 'z' instead.")
+            raise ValueError(f"Axis '{axis}' does not exist! Use 'y', or 'z' instead.")

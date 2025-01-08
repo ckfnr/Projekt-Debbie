@@ -34,12 +34,7 @@ class Movement:
         print("Done!")
 
     def walk_forward(self, *, distance_cm: float, duration_s: float) -> None:
-        # TEST
-        while True:
-            self.leg_right_front.thigh.move(target_angle=120, duration=0.5).join()
-            self.leg_right_front.lower_leg.move(target_angle=80, duration=0.5).join()
-            self.leg_right_front.thigh.move(target_angle=80, duration=0.5)
-            self.leg_right_front.lower_leg.move(target_angle=120, duration=0.5)
+        raise NotImplementedError("This function is not implemented yet!")
         
     def walk_sideways(self, *, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
