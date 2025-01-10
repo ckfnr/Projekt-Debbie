@@ -1,7 +1,9 @@
 # **Debbie**
 > 🚧 _Project in Progress!_ – Regular updates are being made.
 
-![Debbie prefiew](./Debbie_preview.jpg)
+<p align="center">
+  <img src="./Debbie_preview.jpg" width="350">
+</p>
 
 ## **Description**
 _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with simplicity in mind. Stay tuned for ongoing enhancements!
