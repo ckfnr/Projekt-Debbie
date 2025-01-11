@@ -1,8 +1,0 @@
-Projekt Debbie
---------------
-Erstellt von Cesario Kufner & Momen Louati, in zusammenarbeit mit Prof. Ing. Michael Wagner, Gesponsert von Schrack Technik GmbH
---------------
-
-Allgemeine Informationen
---------------
-Einige STL-Dateien sind Aufgrund von Fehlern mit Fusion 360 falsch skaliert und müssen vor dem 3D-Druck auf 10% skaliert werden.
