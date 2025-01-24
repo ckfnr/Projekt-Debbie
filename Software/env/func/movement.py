@@ -35,7 +35,7 @@ class Movement:
 
     def walk_forward(self, *, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
-        
+
     def walk_sideways(self, *, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
 

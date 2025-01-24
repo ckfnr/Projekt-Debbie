@@ -65,6 +65,9 @@ class ServoManager:
         adjusted_target: int = ((2*self.normal_position - target_angle) if self.mirrored else (target_angle)) + self.deviation
         steps: int
 
+        # Debug logging
+        print(f"Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}")
+
         # Define steps
         if nm_action:
             steps = 50
@@ -75,24 +78,24 @@ class ServoManager:
 
         # Check if angle is valid
         if not self.min_angle <= adjusted_target <= self.max_angle:
-            raise ValueError(f"Adjusted target angle {adjusted_target} is out of range [{self.min_angle}, {self.max_angle}]")
+            raise ValueError(f"Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
 
         def move_to_target() -> None:
-            valid_anlge: bool = True
+            valid_angle: bool = True
             with self.lock:
                 while abs(adjusted_target - self.calculation_angle) >= config.servo_stopping_treshhold:
                     if not self.min_angle <= self.calculation_angle + step_difference <= self.max_angle:
                         print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
-                        valid_anlge = False
+                        valid_angle = False
                         break
                     self.calculation_angle += step_difference
                     self.servo.angle = round(self.calculation_angle)
                     time.sleep(duration / steps)
                 # Move to target angle
-                if valid_anlge:
+                if valid_angle:
                     self.calculation_angle = adjusted_target
                     self.servo.angle = self.calculation_angle
-                valid_anlge = True
+                valid_angle = True
 
         moving_thread: threading.Thread = threading.Thread(target=move_to_target, daemon=True)
         moving_thread.start()

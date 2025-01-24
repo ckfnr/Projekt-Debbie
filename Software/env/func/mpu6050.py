@@ -27,9 +27,9 @@ class Gyro:
         self.deviation_y: float = config.deviation_y
         self.deviation_z: float = config.deviation_z
 
-        self.mpu_init()
+        self._mpu_init()
 
-    def mpu_init(self) -> None:
+    def _mpu_init(self) -> None:
         """Initializes the MPU6050 sensor."""
         self.bus.write_byte_data(self.Device_Address, self.PWR_MGMT_1, 1)  # Wake up MPU6050
         self.bus.write_byte_data(self.Device_Address, self.SMPLRT_DIV, 7)
@@ -37,7 +37,7 @@ class Gyro:
         self.bus.write_byte_data(self.Device_Address, self.GYRO_CONFIG, 24)
         self.bus.write_byte_data(self.Device_Address, self.INT_ENABLE, 1)
     
-    def read_raw_data(self, addr: int) -> int:
+    def _read_raw_data(self, addr: int) -> int:
         """Reads raw 16-bit data from the MPU6050 sensor."""
         high = self.bus.read_byte_data(self.Device_Address, addr)
         low = self.bus.read_byte_data(self.Device_Address, addr + 1)
@@ -52,11 +52,11 @@ class Gyro:
     def get_accel_data(self, axis: str) -> float:
         """Gets the acceleration data from the MPU6050 sensor."""
         if axis == 'x':
-            # return self.read_raw_data(self.ACCEL_XOUT) / 16384.0 * 90 + self.deviation_x
+            # return self._read_raw_data(self.ACCEL_XOUT) / 16384.0 * 90 + self.deviation_x
             raise ProgrammingError("Bad decision: (axis = x)  |  Use 'y' or 'z' instead.")
         elif axis == 'y':
-            return self.read_raw_data(self.ACCEL_YOUT) / 16384.0 * 90 + self.deviation_y
+            return self._read_raw_data(self.ACCEL_YOUT) / 16384.0 * 90 + self.deviation_y
         elif axis == 'z':
-            return self.read_raw_data(self.ACCEL_ZOUT) / 16384.0 * 90 + self.deviation_z
+            return self._read_raw_data(self.ACCEL_ZOUT) / 16384.0 * 90 + self.deviation_z
         else:
             raise ValueError(f"Axis '{axis}' does not exist! Use 'y', or 'z' instead.")
