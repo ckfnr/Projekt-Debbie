@@ -1,10 +1,13 @@
 import time
 import threading
 from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
-from typing import Any
+from typing import Any, Optional
 
 # Config
 from env.config import config
+
+# Errors
+from env.func.Errors import NoThreadError
 
 # Initialize servo kit
 try:
@@ -41,16 +44,18 @@ class ServoManager:
     def __init__(self, *, servo_channel: int, min_angle: int, max_angle: int, deviation: int, mirrored: bool) -> None:
         # Check if all values are valid
         if not 0 <= servo_channel <= config.servo_channel_count - 1:
-            raise ValueError(f"Servo channel must be between 0 and {config.servo_channel_count - 1}!")
+            raise ValueError(f"Servo channel must be between or equal to 0 and {config.servo_channel_count - 1}!")
 
         self.servo: Servo = servo_kit.servo[servo_channel]
-        self.min_angle: int = min_angle + deviation
-        self.max_angle: int = max_angle + deviation
+        self.servo_channel: int = servo_channel
+        self.min_angle: int = min_angle + (deviation if mirrored else -deviation)
+        self.max_angle: int = max_angle + (deviation if mirrored else -deviation)
         self.deviation: int = deviation
         self.normal_position: int = config.servo_normal_position + deviation
         self.calculation_angle: float = self.normal_position
         self.mirrored: bool = mirrored
         self.lock: threading.Lock = threading.Lock()
+        self.servo_thread: Optional[threading.Thread] = None
 
     def move(self, target_angle: int, duration: float, nm_action: bool = False) -> threading.Thread:
         """
@@ -116,6 +121,15 @@ class ServoManager:
         :return (int): The current angle of the servo.
         """
         return self.servo.angle
+    
+    def join(self) -> None:
+        """
+        Joins the servo thread.
+        """
+        if not self.servo_thread:
+            raise NoThreadError(f"There was no thread to join at servo with servo channel '{self.servo_channel}'!")
+
+        self.servo_thread.join()
 
 class Leg:
     """
