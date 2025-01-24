@@ -20,3 +20,7 @@ while True:
 
     for i in [thread_1, thread_2, thread_3, thread_4]:
         i.join()
+
+    # Move side axis of the right front leg
+    movement.leg_right_front.side_axis.move(target_angle=100, duration=0.5)
+
