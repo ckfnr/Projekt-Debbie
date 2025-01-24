@@ -67,7 +67,7 @@ class ServoManager:
         :raises ValueError: If the target angle is outside the valid range.
         """
         # Adjust target angle and calculate the step difference
-        adjusted_target: int = ((2*self.normal_position - target_angle) if self.mirrored else (target_angle)) + (self.deviation if self.mirrored else -self.deviation)
+        adjusted_target: int = ((2*self.normal_position - target_angle) if self.mirrored else (target_angle)) + (-self.deviation if self.mirrored else self.deviation)
         steps: int
 
         # Debug logging
