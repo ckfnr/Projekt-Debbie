@@ -48,8 +48,8 @@ class ServoManager:
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
-        self.min_angle: int = min_angle + (deviation if mirrored else -deviation)
-        self.max_angle: int = max_angle + (deviation if mirrored else -deviation)
+        self.min_angle: int = min_angle + deviation
+        self.max_angle: int = max_angle + deviation
         self.deviation: int = deviation
         self.normal_position: int = config.servo_normal_position + deviation
         self.calculation_angle: float = self.normal_position
