@@ -2,6 +2,9 @@ import time
 import threading
 from env.func.servos import Leg
 
+# Classes
+from env.func.servos import ServoManager
+
 # Config
 from env.config import config
 
@@ -20,16 +23,25 @@ class Movement:
         if config.auto_normalize_at_startup: self.normalize_all_legs()
 
     def normalize_all_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
-        leg_threads: list[threading.Thread] = []
+        # leg_threads: list[threading.Thread] = []
+        all_servos: list[ServoManager] = []
         print("Moving servos to normal position...")
 
-        # Start moving all servos to their normal position
-        for leg in self.all_legs:
-            leg_threads.extend(i for i in leg._move_to_nm_position(duration_s))
+        # # Start moving all servos to their normal position
+        # for leg in self.all_legs:
+        #     leg_threads.extend(i for i in leg._move_to_nm_position(duration_s))
 
-        # Wait for all threads to finish
-        for thread in leg_threads:
-            thread.join()
+        # # Wait for all threads to finish
+        # for thread in leg_threads:
+        #     thread.join()
+
+        for leg in self.all_legs:
+            leg.move_to_normal_position(duration_s=duration_s)
+            all_servos.extend(leg.get_servos())
+        
+        # Wait for all servos to finish
+        for servo in all_servos:
+            servo.join()
 
         print("Done!")
 

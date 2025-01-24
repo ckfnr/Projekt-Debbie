@@ -173,11 +173,20 @@ class Leg:
         self.lower_leg.move_to_normal(duration_s)
         self.side_axis.move_to_normal(duration_s)
 
-    def move_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
+    def move_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed, wait: bool = False) -> None:
         """
         Moves all servos in the leg to their normal (default) positions. Waits until all servos have finished. (Default = servo_default_normalize_speed)
 
         :return (None): This function does not return a value.
         """
+        self._move_to_nm_position(duration_s)
+
+        if not wait:
+            return
+
         for servo in [self.thigh, self.lower_leg, self.side_axis]:
             servo.join()
+
+    def get_servos(self) -> tuple[ServoManager, ServoManager, ServoManager]:
+        """Returns a tuple of the three ServoManagers in the leg."""
+        return self.thigh, self.lower_leg, self.side_axis
