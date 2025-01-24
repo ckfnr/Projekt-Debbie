@@ -28,7 +28,7 @@ class Config:
                 "lower_leg": -25,
                 "side_axis": 0,
             },
-            "mirrored_servos":{
+            "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
                 "side_axis": False,
@@ -53,7 +53,7 @@ class Config:
                 "lower_leg": -3,
                 "side_axis": 0,
             },
-            "mirrored_servos":{
+            "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
                 "side_axis": True,
@@ -78,7 +78,7 @@ class Config:
                 "lower_leg": 0,
                 "side_axis": -2,
             },
-            "mirrored_servos":{
+            "mirrored":{
                 "thigh": True,
                 "lower_leg": True,
                 "side_axis": True,
@@ -103,7 +103,7 @@ class Config:
                 "lower_leg": 10,
                 "side_axis": 10,
             },
-            "mirrored_servos":{
+            "mirrored":{
                 "thigh": True,
                 "lower_leg": True,
                 "side_axis": False,
