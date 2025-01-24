@@ -1,2 +1,0 @@
-class ProgrammingError(Exception):
-    pass
