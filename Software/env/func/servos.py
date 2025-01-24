@@ -125,6 +125,7 @@ class Leg:
             "channels":   {"thigh", "lower_leg", "side_axis"},
             "angles":     {"min_thigh", "max_thigh", "min_lower_leg", "max_lower_leg", "min_side_axis", "max_side_axis"},
             "deviations": {"thigh", "lower_leg", "side_axis"},
+            "mirrored":   {"thigh", "lower_leg", "side_axis"},
         }
         _validate_dict(self.required_keys, leg_configurations)
 
