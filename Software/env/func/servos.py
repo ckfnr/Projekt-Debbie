@@ -57,7 +57,7 @@ class ServoManager:
         self.lock: threading.Lock = threading.Lock()
         self.servo_thread: Optional[threading.Thread] = None
 
-    def move(self, target_angle: int, duration: float, nm_action: bool = False) -> threading.Thread:
+    def move(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
         """
         Moves the servo to a target angle over a specified duration.
 
@@ -104,15 +104,15 @@ class ServoManager:
 
         moving_thread: threading.Thread = threading.Thread(target=move_to_target, daemon=True)
         moving_thread.start()
-        return moving_thread
+        self.servo_thread = moving_thread
 
-    def move_to_normal(self, duration_s: float) -> threading.Thread:
+    def move_to_normal(self, duration_s: float) -> None:
         """
         Moves the servo to its normal (default) position.
 
         :return (threading.Thread): The thread executing the movement.
         """
-        return self.move(self.normal_position, duration_s, nm_action=True)
+        self.move(self.normal_position, duration_s, nm_action=True)
 
     def get_servo_angle(self) -> int:
         """
@@ -168,8 +168,10 @@ class Leg:
             mirrored=       leg_configurations["mirrored"]["side_axis"],
         )
 
-    def _move_to_nm_position(self, duration_s: float) -> tuple[threading.Thread, threading.Thread, threading.Thread]:
-        return self.thigh.move_to_normal(duration_s), self.lower_leg.move_to_normal(duration_s), self.side_axis.move_to_normal(duration_s)
+    def _move_to_nm_position(self, duration_s: float) -> None:
+        self.thigh.move_to_normal(duration_s)
+        self.lower_leg.move_to_normal(duration_s)
+        self.side_axis.move_to_normal(duration_s)
 
     def move_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
         """
@@ -177,8 +179,5 @@ class Leg:
 
         :return (None): This function does not return a value.
         """
-        for thread in self._move_to_nm_position(duration_s):
-            try:
-                thread.join()
-            except Exception as e:
-                print(f"Error in thread: {e}")
+        for servo in [self.thigh, self.lower_leg, self.side_axis]:
+            servo.join()
