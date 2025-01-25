@@ -52,8 +52,8 @@ class ServoManager:
         self.servo_channel: int = servo_channel
         # self.deviation: int = - deviation if mirrored else deviation
         self.deviation: int = deviation
-        self.min_angle: int = min_angle + self.deviation  #! Calculation may be wrong
-        self.max_angle: int = max_angle + self.deviation  #! Calculation may be wrong
+        self.min_angle: int = min_angle + self.deviation
+        self.max_angle: int = max_angle + self.deviation
         self.normal_position: int = config.servo_normal_position + self.deviation
         self.calculation_angle: float = self.normal_position
         self.mirrored: bool = mirrored
@@ -70,7 +70,11 @@ class ServoManager:
         :raises ValueError: If the target angle is outside the valid range.
         """
         # Adjust target angle and calculate the step difference
-        adjusted_target = 2 * self.normal_position - target_angle + self.deviation  #! Calculation may be wrong
+        if self.mirrored:
+            adjusted_target = 2 * self.normal_position - target_angle + self.deviation  #! Maybe wrong?
+        else:
+            adjusted_target = target_angle + self.deviation
+
         steps: int
 
         # Debug logging
