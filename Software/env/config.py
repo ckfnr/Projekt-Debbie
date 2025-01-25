@@ -5,7 +5,7 @@ class Config:
         self.servo_normal_position: int = 90           # Normal position of all servos
         self.servo_default_normalize_speed: float = 5  # How many seconds the servos should need to normalize their position
         self.auto_normalize_at_startup: bool = True    # If DEBBIE will normalize its servos at startup
-        self.servo_stopping_treshhold: float = 0.1     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
+        self.servo_stopping_treshhold: float = 0.5     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
 
         # Leg configurations
         # All values have to be integer!!!
