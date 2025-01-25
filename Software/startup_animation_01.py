@@ -13,16 +13,22 @@ def main() -> None:
     while True:
         # Lie down
         for leg in all_legs:
-            leg.thigh.move(target_angle=120, duration=d)
-            leg.lower_leg.move(target_angle=80, duration=d)
+            leg.thigh.set(target_angle=120, duration=d)
+            leg.lower_leg.set(target_angle=80, duration=d)
+        # Start threads
+        for leg in all_legs:
+            leg.thigh.start()
         # Join all threads
         for leg in all_legs:
             leg.thigh.join()
 
         # Stand up
         for leg in all_legs:
-            leg.thigh.move(target_angle=90, duration=d)
-            leg.lower_leg.move(target_angle=90, duration=d)
+            leg.thigh.set(target_angle=90, duration=d)
+            leg.lower_leg.set(target_angle=90, duration=d)
+        # Start threads
+        for leg in all_legs:
+            leg.thigh.start()
         # Join all threads
         for leg in all_legs:
             leg.thigh.join()

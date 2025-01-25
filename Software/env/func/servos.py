@@ -62,13 +62,13 @@ class ServoManager:
         self.leg: str = leg
         self.servo_type: str = servo_type
 
-    def move(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
+    def set(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
         """
         Moves the servo to a target angle over a specified duration.
 
-        :param target_angle (int): The target angle to move the servo to.
+        :param target_angle (int): The target angle to start the servo to.
         :param duration (float): Time in seconds to complete the movement.
-        :param nm_action (bool): Flag indicating if this is a 'move to normal' action with fixed steps.
+        :param nm_action (bool): Flag indicating if this is a 'start to normal' action with fixed steps.
         :raises ValueError: If the target angle is outside the valid range.
         """
         # Adjust target angle for mirroring and deviation
@@ -106,9 +106,13 @@ class ServoManager:
                 self.servo.angle = round(adjusted_target)
 
         # Create and start the movement thread
-        moving_thread = threading.Thread(target=move_to_target, daemon=True)
-        moving_thread.start()
-        self.servo_thread = moving_thread
+        self.servo_thread = threading.Thread(target=move_to_target, daemon=True)
+
+    def start(self) -> None:
+        if not self.servo_thread:
+            raise NoThreadError(f"There was no thread to set servos ({self.leg = }, {self.servo_type = })with servo channel '{self.servo_channel}'!")
+
+        self.servo_thread.start()
 
     def move_to_normal(self, duration_s: float) -> None:
         """
@@ -116,7 +120,8 @@ class ServoManager:
 
         :return (threading.Thread): The thread executing the movement.
         """
-        self.move((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
+        self.set((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
+        self.start()
 
     def get_servo_angle(self) -> int:
         """
