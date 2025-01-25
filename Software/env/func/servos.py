@@ -55,7 +55,7 @@ class ServoManager:
         # self.deviation: int = - deviation if mirrored else deviation
         self.deviation: int = deviation
         self.min_angle: int = min_angle - self.deviation if mirrored else min_angle + self.deviation
-        self.max_angle: int = min_angle - self.deviation if mirrored else max_angle + self.deviation
+        self.max_angle: int = max_angle - self.deviation if mirrored else max_angle + self.deviation
         self.adjusted_normal_position: int = config.servo_normal_position + self.deviation
         self.calculation_angle: float = self.adjusted_normal_position
         self.mirrored: bool = mirrored
