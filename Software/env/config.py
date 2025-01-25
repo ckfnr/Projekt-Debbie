@@ -50,7 +50,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 12,
-                "lower_leg": -3,
+                "lower_leg": 10,
                 "side_axis": 0,
             },
             "mirrored":{
@@ -75,7 +75,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 32,
-                "lower_leg": -7,
+                "lower_leg": 7,
                 "side_axis": -2,
             },
             "mirrored":{
@@ -100,7 +100,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 20,
-                "lower_leg": 2,
+                "lower_leg": 18,
                 "side_axis": 10,
             },
             "mirrored":{
