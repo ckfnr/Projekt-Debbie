@@ -74,7 +74,7 @@ class ServoManager:
         # Adjust target angle and calculate the step difference
         if self.mirrored and self.servo_type != "side_axis":
             # Calculate mirrored adjusted target
-            adjusted_target = self.max_angle - (target_angle - self.min_angle) + self.deviation
+            adjusted_target = self.max_angle - ((target_angle + self.deviation) - self.min_angle)
         else:
             # Non-mirrored target adjustment
             adjusted_target = target_angle + self.deviation
