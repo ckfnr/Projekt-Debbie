@@ -1,5 +1,5 @@
 # **Debbie**
-> 🚧 _Project in Progress!_ – Regular updates are being made.
+> 🚧 **_Project in Progress!_** – Regular updates are being made.
 
 <p align="center">
   <img src="./Debbie_preview.jpg" width="350">
