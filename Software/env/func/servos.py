@@ -68,55 +68,46 @@ class ServoManager:
 
         :param target_angle (int): The target angle to move the servo to.
         :param duration (float): Time in seconds to complete the movement.
-        :return (threading.Thread): The thread executing the movement.
+        :param nm_action (bool): Flag indicating if this is a 'move to normal' action with fixed steps.
         :raises ValueError: If the target angle is outside the valid range.
         """
-        # Adjust target angle and calculate the step difference
+        # Adjust target angle for mirroring and deviation
         if self.mirrored and self.servo_type != "side_axis":
-            # Calculate mirrored adjusted target
             adjusted_target = self.max_angle - ((target_angle + self.deviation) - self.min_angle)
         else:
-            # Non-mirrored target adjustment
             adjusted_target = target_angle + self.deviation
 
-        # Debug logging
-        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.adjusted_normal_position}")
-
-        # Define steps
-        if nm_action:
-            steps = 50
-        else:
-            steps = abs(target_angle - self.servo.angle)
-
-        step_difference: float = (adjusted_target - self.calculation_angle) / steps
-
-        # Check if angle is valid
+        # Validate the adjusted target angle
         if not self.min_angle <= adjusted_target <= self.max_angle:
             raise ValueError(f"Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
 
+        # Determine steps and step difference
+        current_angle = self.servo.angle if self.servo.angle is not None else self.adjusted_normal_position
+        steps = 50 if nm_action else max(1, abs(int(adjusted_target - current_angle)))
+        step_difference = (adjusted_target - current_angle) / steps
+
+        # Debug logging
+        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, "
+              f"Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
+
         def move_to_target() -> None:
-            valid_angle: bool = True
+            nonlocal current_angle
             with self.lock:
-                while abs(adjusted_target - self.calculation_angle) >= config.servo_stopping_treshhold:
-                    if not self.min_angle <= round(self.calculation_angle + step_difference, 0) <= self.max_angle:
-                        print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
-                        valid_angle = False
+                while abs(adjusted_target - current_angle) > config.servo_stopping_treshhold:
+                    next_angle = current_angle + step_difference
+                    if not self.min_angle <= next_angle <= self.max_angle:
+                        print(f"WARNING: Next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
                         break
 
-                    if self.mirrored:
-                        self.calculation_angle -= step_difference
-                    else:
-                        self.calculation_angle += step_difference
-
-                    self.servo.angle = round(self.calculation_angle)
+                    current_angle = next_angle
+                    self.servo.angle = round(current_angle)
                     time.sleep(duration / steps)
-                # Move to target angle
-                if valid_angle:
-                    self.calculation_angle = adjusted_target
-                    self.servo.angle = self.calculation_angle
-                valid_angle = True
+                
+                # Final adjustment to ensure we reach the exact target
+                self.servo.angle = round(adjusted_target)
 
-        moving_thread: threading.Thread = threading.Thread(target=move_to_target, daemon=True)
+        # Create and start the movement thread
+        moving_thread = threading.Thread(target=move_to_target, daemon=True)
         moving_thread.start()
         self.servo_thread = moving_thread
 
