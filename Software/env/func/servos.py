@@ -75,7 +75,7 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         if self.mirrored:
-            adjusted_target = 2 * self.normal_position - target_angle + self.deviation  #! Maybe wrong?
+            adjusted_target = 2 * self.normal_position - target_angle - self.deviation  #! Maybe wrong?
         else:
             adjusted_target = target_angle + self.deviation
 
