@@ -87,8 +87,7 @@ class ServoManager:
         step_difference = (adjusted_target - current_angle) / steps
 
         # Debug logging
-        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, "
-              f"Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
+        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
 
         def move_to_target() -> None:
             nonlocal current_angle
