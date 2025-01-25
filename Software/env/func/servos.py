@@ -74,10 +74,10 @@ class ServoManager:
         :raises ValueError: If the target angle is outside the valid range.
         """
         # Adjust target angle and calculate the step difference
-        # if self.mirrored:
-        adjusted_target = 2 * self.normal_position - target_angle + self.deviation  #! Maybe wrong?
-        # else:
-        #     adjusted_target = target_angle + self.deviation
+        if self.mirrored:
+            adjusted_target = 2 * self.normal_position - target_angle + self.deviation  #! Maybe wrong?
+        else:
+            adjusted_target = target_angle + self.deviation
 
         steps: int
 
@@ -138,9 +138,10 @@ class ServoManager:
         Joins the servo thread.
         """
         if not self.servo_thread:
-            raise NoThreadError(f"There was no thread to join at servo with servo channel '{self.servo_channel}'!")
+            raise NoThreadError(f"There was no thread to join at servo ({self.leg = }, {self.servo_type = })with servo channel '{self.servo_channel}'!")
 
         self.servo_thread.join()
+        self.servo_thread = None
 
 class Leg:
     """
