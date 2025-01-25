@@ -31,7 +31,7 @@ class Config:
             "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
-                "side_axis": False,
+                "side_axis": False,  # Has to be False!
             }
         }
         self.leg_configuration_rb: dict[str, dict[str, int]] = {
@@ -56,7 +56,7 @@ class Config:
             "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
-                "side_axis": True,
+                "side_axis": False,  # Has to be False!
             }
         }
         self.leg_configuration_lf: dict[str, dict[str, int]] = {
@@ -81,7 +81,7 @@ class Config:
             "mirrored":{
                 "thigh": True,
                 "lower_leg": False,
-                "side_axis": True,
+                "side_axis": False,  # Has to be False!
             }
         }
         self.leg_configuration_lb: dict[str, dict[str, int]] = {
@@ -106,7 +106,7 @@ class Config:
             "mirrored":{
                 "thigh": True,
                 "lower_leg": False,
-                "side_axis": False,
+                "side_axis": False,  # Has to be False!
             }
         }
 
