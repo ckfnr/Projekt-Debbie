@@ -52,8 +52,8 @@ class ServoManager:
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
         self.deviation: int = deviation
-        self.min_angle: int = min_angle - self.deviation if mirrored else min_angle + self.deviation
-        self.max_angle: int = max_angle - self.deviation if mirrored else max_angle + self.deviation
+        self.min_angle: int = min_angle + self.deviation if mirrored else min_angle - self.deviation
+        self.max_angle: int = max_angle + self.deviation if mirrored else max_angle - self.deviation
         self.adjusted_normal_position: int = config.servo_normal_position + self.deviation
         self.calculation_angle: float = self.adjusted_normal_position
         self.mirrored: bool = mirrored
@@ -73,7 +73,7 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         if self.mirrored:
-            adjusted_target = 2 * (self.adjusted_normal_position) - target_angle  # Adjusted logic
+            adjusted_target = 2 * (self.adjusted_normal_position - self.deviation) - target_angle - self.deviation
         else:
             adjusted_target = target_angle + self.deviation
 
