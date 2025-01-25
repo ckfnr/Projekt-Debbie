@@ -78,7 +78,7 @@ class ServoManager:
         steps: int
 
         # Debug logging
-        print(f"Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}")
+        print(f"Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.normal_position}")
 
         # Define steps
         if nm_action:
