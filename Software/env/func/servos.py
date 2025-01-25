@@ -123,7 +123,7 @@ class ServoManager:
 
         :return (threading.Thread): The thread executing the movement.
         """
-        self.move(self.normal_position, duration_s, nm_action=True)
+        self.move(self.normal_position-self.deviation, duration_s, nm_action=True)
 
     def get_servo_angle(self) -> int:
         """
