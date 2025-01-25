@@ -54,7 +54,7 @@ class ServoManager:
         self.deviation: int = deviation
         self.min_angle: int = min_angle - self.deviation if mirrored else min_angle + self.deviation
         self.max_angle: int = max_angle - self.deviation if mirrored else max_angle + self.deviation
-        self.adjusted_normal_position: int = config.servo_normal_position + self.deviation
+        self.adjusted_normal_position: int = config.servo_normal_position - self.deviation if mirrored else config.servo_normal_position + self.deviation
         self.calculation_angle: float = self.adjusted_normal_position
         self.mirrored: bool = mirrored
         self.lock: threading.Lock = threading.Lock()
@@ -77,6 +77,7 @@ class ServoManager:
             # adjusted_target = self.adjusted_normal_position * (1 + (1 - target_angle))
             # adjusted_target = self.adjusted_normal_position + (self.adjusted_normal_position - target_angle)
             adjusted_target = self.max_angle - (target_angle - self.min_angle)
+            print(f"adjusted_target ({adjusted_target}) = {self.max_angle} - ({target_angle} -  {self.min_angle})")
         else:
             adjusted_target = target_angle + self.deviation
 

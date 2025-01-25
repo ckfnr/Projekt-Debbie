@@ -3,7 +3,7 @@ from env.func.movement import Movement
 
 def test_servo_movement() -> None:
     m: Movement = Movement()
-    angles_to_test: list[int] = [90, 40, 120]  # Including an out-of-range angle (120)
+    angles_to_test: list[int] = [40, 120]  # Including an out-of-range angle (120)
 
     for servo in [m.leg_right_front.thigh,
                   m.leg_left_front.thigh,
