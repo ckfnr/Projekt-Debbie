@@ -72,7 +72,7 @@ class ServoManager:
         :raises ValueError: If the target angle is outside the valid range.
         """
         # Adjust target angle for mirroring and deviation
-        if self.mirrored and self.servo_type != "side_axis":
+        if self.mirrored:
             adjusted_target = self.max_angle - ((target_angle + self.deviation) - self.min_angle)
         else:
             adjusted_target = target_angle + self.deviation
