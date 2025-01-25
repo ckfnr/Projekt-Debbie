@@ -76,8 +76,9 @@ class ServoManager:
             # adjusted_target = (2 * config.servo_normal_position) - target_angle - self.deviation
             # adjusted_target = self.adjusted_normal_position * (1 + (1 - target_angle))
             # adjusted_target = self.adjusted_normal_position + (self.adjusted_normal_position - target_angle)
-            adjusted_target = self.max_angle - (target_angle - self.min_angle)
-            print(f"adjusted_target ({adjusted_target}) = {self.max_angle} - ({target_angle} -  {self.min_angle})")
+            # adjusted_target = self.max_angle - (target_angle - self.min_angle)
+            # print(f"adjusted_target ({adjusted_target}) = {self.max_angle} - ({target_angle} -  {self.min_angle})")
+            adjusted_target = target_angle - self.deviation
         else:
             adjusted_target = target_angle + self.deviation
 
