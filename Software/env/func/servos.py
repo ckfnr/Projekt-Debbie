@@ -50,10 +50,10 @@ class ServoManager:
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
-        self.min_angle: int = min_angle + deviation if not mirrored else min_angle - deviation  #! Calculation may be wrong
-        self.max_angle: int = max_angle + deviation if not mirrored else max_angle - deviation  #! Calculation may be wrong
-        self.deviation: int = deviation
-        self.normal_position: int = config.servo_normal_position + deviation
+        self.deviation: int = - deviation if mirrored else deviation
+        self.min_angle: int = min_angle + self.deviation  #! Calculation may be wrong
+        self.max_angle: int = max_angle + self.deviation  #! Calculation may be wrong
+        self.normal_position: int = config.servo_normal_position + self.deviation
         self.calculation_angle: float = self.normal_position
         self.mirrored: bool = mirrored
         self.lock: threading.Lock = threading.Lock()
