@@ -102,7 +102,12 @@ class ServoManager:
                         print(f"WARNING: Angle {self.calculation_angle + step_difference} not in range of [{self.min_angle} - {self.max_angle}]! Breaking out of loop...")
                         valid_angle = False
                         break
-                    self.calculation_angle += step_difference
+
+                    if self.mirrored:
+                        self.calculation_angle -= step_difference
+                    else:
+                        self.calculation_angle += step_difference
+
                     self.servo.angle = round(self.calculation_angle)
                     time.sleep(duration / steps)
                 # Move to target angle
