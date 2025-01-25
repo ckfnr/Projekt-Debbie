@@ -56,8 +56,8 @@ class ServoManager:
         self.deviation: int = deviation
         self.min_angle: int = min_angle + self.deviation
         self.max_angle: int = max_angle + self.deviation
-        self.normal_position: int = config.servo_normal_position + self.deviation
-        self.calculation_angle: float = self.normal_position
+        self.adjusted_normal_position: int = config.servo_normal_position + self.deviation
+        self.calculation_angle: float = self.adjusted_normal_position
         self.mirrored: bool = mirrored
         self.lock: threading.Lock = threading.Lock()
         self.servo_thread: Optional[threading.Thread] = None
@@ -75,14 +75,14 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         if self.mirrored:
-            adjusted_target = 2 * self.normal_position - target_angle - self.deviation  #! Maybe wrong?
+            adjusted_target = 2 * (self.adjusted_normal_position - self.deviation) - target_angle - self.deviation  #! Maybe wrong?
         else:
             adjusted_target = target_angle + self.deviation
 
         steps: int
 
         # Debug logging
-        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.normal_position}")
+        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.adjusted_normal_position}")
 
         # Define steps
         if nm_action:
@@ -123,7 +123,7 @@ class ServoManager:
 
         :return (threading.Thread): The thread executing the movement.
         """
-        self.move(self.normal_position-self.deviation, duration_s, nm_action=True)
+        self.move(self.adjusted_normal_position-self.deviation, duration_s, nm_action=True)
 
     def get_servo_angle(self) -> int:
         """
