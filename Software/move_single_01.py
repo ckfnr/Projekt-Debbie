@@ -31,6 +31,7 @@ while True:
     else:
         prefix = servo_input.split("=")[0].strip()  # Extract the prefix
         if prefix in servo_map:
-            servo_map[prefix].move(target_angle=_get_value(servo_input), duration=d).join()
+            servo_map[prefix].move(target_angle=_get_value(servo_input), duration=d)
+            servo_map[prefix].join()
         else:
             print("Invalid input. Please enter a valid servo input (e.g. 'rf_s = 6')!")
