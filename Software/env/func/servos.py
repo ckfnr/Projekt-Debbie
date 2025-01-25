@@ -15,7 +15,6 @@ try:
 except Exception as e:
     raise RuntimeError(f"Failed to initialize ServoKit: {e}")
 
-
 def _validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) -> None:
     """
     Validates whether a dictionary contains all required keys and subkeys.
@@ -52,7 +51,6 @@ class ServoManager:
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
-        # self.deviation: int = - deviation if mirrored else deviation
         self.deviation: int = deviation
         self.min_angle: int = min_angle - self.deviation if mirrored else min_angle + self.deviation
         self.max_angle: int = max_angle - self.deviation if mirrored else max_angle + self.deviation
@@ -75,11 +73,9 @@ class ServoManager:
         """
         # Adjust target angle and calculate the step difference
         if self.mirrored:
-            adjusted_target = 2 * (self.adjusted_normal_position - self.deviation) - target_angle - self.deviation  #! Maybe wrong?
+            adjusted_target = 2 * (self.adjusted_normal_position) - target_angle  # Adjusted logic
         else:
             adjusted_target = target_angle + self.deviation
-
-        steps: int
 
         # Debug logging
         print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.adjusted_normal_position}")
