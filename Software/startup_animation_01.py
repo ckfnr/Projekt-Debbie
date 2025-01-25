@@ -21,8 +21,8 @@ def main() -> None:
 
         # Stand up
         for leg in all_legs:
-            leg.thigh.move(target_angle=40, duration=d)
-            leg.lower_leg.move(target_angle=120, duration=d)
+            leg.thigh.move(target_angle=90, duration=d)
+            leg.lower_leg.move(target_angle=90, duration=d)
         # Join all threads
         for leg in all_legs:
             leg.thigh.join()
