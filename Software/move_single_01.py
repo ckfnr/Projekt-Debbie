@@ -23,6 +23,9 @@ servo_map = {
     "lb_s": m.leg_left_back.side_axis,
 }
 
+# Normalize all legs at startup
+m.normalize_all_legs()
+
 while True:
     servo_input: str = input("Enter a value (e.g. 'rf_s = 6') OR 'nm' to normalize all legs. > ").strip()
 

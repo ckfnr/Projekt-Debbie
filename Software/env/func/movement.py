@@ -19,18 +19,17 @@ class Movement:
         # Define a tuple for easier access to all legs at once
         self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
 
-        # Auto normalize
-        if config.auto_normalize_at_startup: self.normalize_all_legs()
+        # # Auto normalize
+        # if config.auto_normalize_at_startup: self.normalize_all_legs()
 
     def normalize_all_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
-        # leg_threads: list[threading.Thread] = []
         all_servos: list[ServoManager] = []
         print("Moving servos to normal position...")
 
         for leg in self.all_legs:
             leg.move_to_normal_position(duration_s=duration_s)
             all_servos.extend(leg.get_servos())
-        
+
         # Wait for all servos to finish
         for servo in all_servos:
             servo.join()
