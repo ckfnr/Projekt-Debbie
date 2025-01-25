@@ -94,7 +94,7 @@ class ServoManager:
             with self.lock:
                 while abs(adjusted_target - current_angle) > config.servo_stopping_treshhold:
                     next_angle = current_angle + step_difference
-                    if not self.min_angle <= next_angle <= self.max_angle:
+                    if not self.min_angle <= round(next_angle, 0) <= self.max_angle:
                         print(f"WARNING: Next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
                         break
 
