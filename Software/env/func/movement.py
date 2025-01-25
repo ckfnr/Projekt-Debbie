@@ -27,14 +27,6 @@ class Movement:
         all_servos: list[ServoManager] = []
         print("Moving servos to normal position...")
 
-        # # Start moving all servos to their normal position
-        # for leg in self.all_legs:
-        #     leg_threads.extend(i for i in leg._move_to_nm_position(duration_s))
-
-        # # Wait for all threads to finish
-        # for thread in leg_threads:
-        #     thread.join()
-
         for leg in self.all_legs:
             leg.move_to_normal_position(duration_s=duration_s)
             all_servos.extend(leg.get_servos())
