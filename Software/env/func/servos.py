@@ -42,7 +42,7 @@ class ServoManager:
     :param deviation (int): Offset to apply to the servo's normal position.
     """
     def __init__(self, *, servo_channel: int, min_angle: int, max_angle: int, deviation: int, mirrored: bool) -> None:
-        raise ProgrammingError("There is still an issue in this code! Disabled functionality for savety!")
+        # raise ProgrammingError("There is still an issue in this code! Disabled functionality for savety!")
 
         # Check if all values are valid
         if not 0 <= servo_channel <= config.servo_channel_count - 1:
@@ -50,8 +50,8 @@ class ServoManager:
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
-        self.min_angle: int = min_angle - deviation if not mirrored else min_angle + deviation  #! Calculation may be wrong
-        self.max_angle: int = max_angle - deviation if not mirrored else max_angle + deviation  #! Calculation may be wrong
+        self.min_angle: int = min_angle + deviation if not mirrored else min_angle - deviation  #! Calculation may be wrong
+        self.max_angle: int = max_angle + deviation if not mirrored else max_angle - deviation  #! Calculation may be wrong
         self.deviation: int = deviation
         self.normal_position: int = config.servo_normal_position + deviation
         self.calculation_angle: float = self.normal_position
