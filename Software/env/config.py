@@ -80,7 +80,7 @@ class Config:
             },
             "mirrored":{
                 "thigh": True,
-                "lower_leg": True,
+                "lower_leg": False,
                 "side_axis": True,
             }
         }
@@ -105,7 +105,7 @@ class Config:
             },
             "mirrored":{
                 "thigh": True,
-                "lower_leg": True,
+                "lower_leg": False,
                 "side_axis": False,
             }
         }
