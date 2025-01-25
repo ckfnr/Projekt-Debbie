@@ -11,10 +11,10 @@ from env.config import config
 class Movement:
     def __init__(self) -> None:
         # Initialize all servos
-        self.leg_right_front: Leg = Leg(leg_configurations=config.leg_configuration_rf)
-        self.leg_right_back: Leg = Leg(leg_configurations=config.leg_configuration_rb)
-        self.leg_left_front: Leg = Leg(leg_configurations=config.leg_configuration_lf)
-        self.leg_left_back: Leg = Leg(leg_configurations=config.leg_configuration_lb)
+        self.leg_right_front: Leg = Leg(leg_configurations=config.leg_configuration_rf, leg="rf")
+        self.leg_right_back: Leg = Leg(leg_configurations=config.leg_configuration_rb,  leg="rb")
+        self.leg_left_front: Leg = Leg(leg_configurations=config.leg_configuration_lf,  leg="lf")
+        self.leg_left_back: Leg = Leg(leg_configurations=config.leg_configuration_lb,   leg="lb")
 
         # Define a tuple for easier access to all legs at once
         self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)

@@ -41,12 +41,14 @@ class ServoManager:
     :param max_angle (int): Maximum allowable angle for the servo.
     :param deviation (int): Offset to apply to the servo's normal position.
     """
-    def __init__(self, *, servo_channel: int, min_angle: int, max_angle: int, deviation: int, mirrored: bool) -> None:
+    def __init__(self, *, servo_channel: int, min_angle: int, max_angle: int, deviation: int, leg: str, mirrored: bool, servo_type: str) -> None:
         # raise ProgrammingError("There is still an issue in this code! Disabled functionality for savety!")
 
         # Check if all values are valid
         if not 0 <= servo_channel <= config.servo_channel_count - 1:
             raise ValueError(f"Servo channel must be between or equal to 0 and {config.servo_channel_count - 1}!")
+        elif not servo_type in ["thigh", "lower_leg", "side_axis"]:
+            raise ValueError(f"Servo type must be one of the following: 'thigh', 'lower_leg', 'side_axis'!")
 
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
@@ -59,6 +61,8 @@ class ServoManager:
         self.mirrored: bool = mirrored
         self.lock: threading.Lock = threading.Lock()
         self.servo_thread: Optional[threading.Thread] = None
+        self.leg: str = leg
+        self.servo_type: str = servo_type
 
     def move(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
         """
@@ -78,7 +82,7 @@ class ServoManager:
         steps: int
 
         # Debug logging
-        print(f"Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.normal_position}")
+        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target Angle: {target_angle}, Adjusted Target: {adjusted_target}, Min Angle: {self.min_angle}, Max Angle: {self.max_angle}, Mirrored: {self.mirrored}, Deviation: {self.deviation}, Normal Position: {self.normal_position}")
 
         # Define steps
         if nm_action:
@@ -144,7 +148,7 @@ class Leg:
 
     :param leg_configurations (dict[str, dict[str, Any]]): Configuration for the leg's channels, angle variations, and deviations.
     """
-    def __init__(self, *, leg_configurations: dict[str, dict[str, Any]]) -> None:
+    def __init__(self, *, leg_configurations: dict[str, dict[str, Any]], leg: str) -> None:
         self.required_keys: dict[str, set[str]] = {
             "channels":   {"thigh", "lower_leg", "side_axis"},
             "angles":     {"min_thigh", "max_thigh", "min_lower_leg", "max_lower_leg", "min_side_axis", "max_side_axis"},
@@ -153,26 +157,35 @@ class Leg:
         }
         _validate_dict(self.required_keys, leg_configurations)
 
+        if not leg in ["rf", "lf", "rb", "lb"]:
+            raise ValueError(f"Invalid leg: {leg}. Must be one of 'rf', 'lf', 'rb', 'lb'.")
+
         self.thigh: ServoManager = ServoManager(
             servo_channel = leg_configurations["channels"]["thigh"],
             min_angle =     leg_configurations["angles"]["min_thigh"],
             max_angle =     leg_configurations["angles"]["max_thigh"],
             deviation =     leg_configurations["deviations"]["thigh"],
-            mirrored=       leg_configurations["mirrored"]["thigh"],
+            mirrored =      leg_configurations["mirrored"]["thigh"],
+            leg =           leg,
+            servo_type =    "thigh",
         )
         self.lower_leg: ServoManager = ServoManager(
             servo_channel = leg_configurations["channels"]["lower_leg"],
             min_angle =     leg_configurations["angles"]["min_lower_leg"],
             max_angle =     leg_configurations["angles"]["max_lower_leg"],
             deviation =     leg_configurations["deviations"]["lower_leg"],
-            mirrored=       leg_configurations["mirrored"]["lower_leg"],
+            mirrored =      leg_configurations["mirrored"]["lower_leg"],
+            leg =           leg,
+            servo_type =    "lower_leg",
         )
         self.side_axis: ServoManager = ServoManager(
             servo_channel = leg_configurations["channels"]["side_axis"],
             min_angle =     leg_configurations["angles"]["min_side_axis"],
             max_angle =     leg_configurations["angles"]["max_side_axis"],
             deviation =     leg_configurations["deviations"]["side_axis"],
-            mirrored=       leg_configurations["mirrored"]["side_axis"],
+            mirrored =      leg_configurations["mirrored"]["side_axis"],
+            leg =           leg,
+            servo_type =    "side_axis",
         )
 
     def _move_to_nm_position(self, duration_s: float) -> None:
