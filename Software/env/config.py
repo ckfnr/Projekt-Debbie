@@ -24,7 +24,7 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 7,
+                "thigh": 17,
                 "lower_leg": -25,
                 "side_axis": 0,
             },
@@ -74,7 +74,7 @@ class Config:
                 "max_side_axis": 90,
             },
             "deviations": {
-                "thigh": 22,
+                "thigh": 12,
                 "lower_leg": 6,
                 "side_axis": -2,
             },
