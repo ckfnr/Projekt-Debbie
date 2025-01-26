@@ -2,7 +2,7 @@ from env.func.servos import Leg
 from env.func.movement import Movement
 
 m = Movement()
-d: int = 2
+d: float = 0.5
 
 # Normalize all legs at startup
 m.normalize_all_legs()
