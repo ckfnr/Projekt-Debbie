@@ -1,7 +1,7 @@
 from env.func.movement import Movement
 
 m = Movement()
-d: int = 1
+d: int = 2
 
 def _get_value(input_string: str) -> int:
     """Extract the value from the input string."""
