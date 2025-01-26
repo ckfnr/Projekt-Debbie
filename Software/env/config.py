@@ -95,13 +95,13 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 60,  # 50
-                "max_side_axis": 100,  # 90
+                "min_side_axis": 90,  # 50
+                "max_side_axis": 130,  # 90
             },
             "deviations": {
                 "thigh": 15,
                 "lower_leg": -45,
-                "side_axis": 0,
+                "side_axis": 10,
             },
             "mirrored":{
                 "thigh": True,
