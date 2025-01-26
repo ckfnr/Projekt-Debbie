@@ -70,7 +70,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 80,  # 40
+                "min_side_axis": 90,  # 40
                 "max_side_axis": 130,  # 90
             },
             "deviations": {
