@@ -20,7 +20,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 15,
+                "min_side_axis": 40,
                 "max_side_axis": 90,
             },
             "deviations": {
@@ -45,7 +45,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 15,
+                "min_side_axis": 50,
                 "max_side_axis": 90,
             },
             "deviations": {
@@ -56,7 +56,7 @@ class Config:
             "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
-                "side_axis": False,  # Has to be False!
+                "side_axis": True,  # Has to be False!  #! Notice
             }
         }
         self.leg_configuration_lf: dict[str, dict[str, int]] = {
@@ -70,7 +70,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 15,
+                "min_side_axis": 40,
                 "max_side_axis": 90,
             },
             "deviations": {
@@ -81,7 +81,7 @@ class Config:
             "mirrored":{
                 "thigh": True,
                 "lower_leg": True,
-                "side_axis": False,  # Has to be False!
+                "side_axis": True,  # Has to be False!  #! Notice
             }
         }
         self.leg_configuration_lb: dict[str, dict[str, int]] = {
@@ -95,7 +95,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 15,
+                "min_side_axis": 50,
                 "max_side_axis": 90,
             },
             "deviations": {
