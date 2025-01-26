@@ -56,10 +56,10 @@ class Config:
             "mirrored":{
                 "thigh": False,
                 "lower_leg": False,
-                "side_axis": True,  # Has to be False!  #! Notice
+                "side_axis": True,  # Has to be False!
             }
         }
-        self.leg_configuration_lf: dict[str, dict[str, int]] = {
+        self.leg_configuration_lf: dict[str, dict[str, int]] = {  # Done
             "channels": {
                 "thigh": 4,
                 "lower_leg": 5,
@@ -70,18 +70,18 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 90,  # 40
-                "max_side_axis": 140,  # 90
+                "min_side_axis": 60,  # 40
+                "max_side_axis": 110,  # 90
             },
             "deviations": {
                 "thigh": 12,
                 "lower_leg": -49,
-                "side_axis": -52,  # 48
+                "side_axis": 18,  # 48
             },
             "mirrored":{
                 "thigh": True,
                 "lower_leg": True,
-                "side_axis": True,  # Has to be False!  #! Notice
+                "side_axis": True,  # Has to be False!
             }
         }
         self.leg_configuration_lb: dict[str, dict[str, int]] = {
@@ -95,13 +95,13 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 50,  # 50
-                "max_side_axis": 90,  # 90
+                "min_side_axis": 60,  # 50
+                "max_side_axis": 100,  # 90
             },
             "deviations": {
                 "thigh": 15,
                 "lower_leg": -45,
-                "side_axis": 10,
+                "side_axis": -10,
             },
             "mirrored":{
                 "thigh": True,
