@@ -43,7 +43,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 90,
+                "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
@@ -68,13 +68,13 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 90,
+                "min_side_axis": 80,
                 "max_side_axis": 130,
             },
             "deviations": {
                 "thigh": 12,
                 "lower_leg": 30,
-                "side_axis": -40,
+                "side_axis": -60,
             },
             "mirrored":{
                 "thigh": False,
@@ -118,7 +118,7 @@ class Config:
                 "max_thigh": 120,
                 "min_lower_leg": 80,
                 "max_lower_leg": 120,
-                "min_side_axis": 90,
+                "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
