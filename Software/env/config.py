@@ -48,7 +48,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 17,
-                "lower_leg": -5,
+                "lower_leg": 15,
                 "side_axis": 0,
             },
             "mirrored":{
@@ -73,7 +73,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 12,
-                "lower_leg": 20,
+                "lower_leg": 30,
                 "side_axis": -40,
             },
             "mirrored":{
@@ -98,7 +98,7 @@ class Config:
             },
             "deviations": {
                 "thigh": 12,
-                "lower_leg": -49,
+                "lower_leg": -39,
                 "side_axis": -42,
             },
             "mirrored":{
