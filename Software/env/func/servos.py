@@ -3,6 +3,9 @@ import threading
 from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
 from typing import Any, Optional
 
+# Func
+from env.func.DEBUG import dprint
+
 # Config
 from env.config import config
 
@@ -31,7 +34,7 @@ def _validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) ->
         if missing_keys:
             raise ValueError(f"'{key}' is missing required keys: {missing_keys}.")
 
-class ServoManager:
+class SServo:
     """
     Manages a single servo's movement and state.
 
@@ -87,7 +90,7 @@ class ServoManager:
         step_difference = (adjusted_target - current_angle) / steps
 
         # Debug logging
-        print(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
+        dprint(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
 
         def move_to_target() -> None:
             nonlocal current_angle
@@ -95,7 +98,7 @@ class ServoManager:
                 while abs(adjusted_target - current_angle) > config.servo_stopping_treshhold:
                     next_angle = current_angle + step_difference
                     if not self.min_angle <= round(next_angle, 0) <= self.max_angle:
-                        print(f"WARNING: Next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
+                        dprint(f"WARNING: Next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
                         break
 
                     current_angle = next_angle
@@ -114,14 +117,13 @@ class ServoManager:
 
         self.servo_thread.start()
 
-    def move_to_normal(self, duration_s: float) -> None:
+    def set_to_normal(self, duration_s: float) -> None:
         """
         Moves the servo to its normal (default) position.
 
         :return (threading.Thread): The thread executing the movement.
         """
         self.set((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
-        self.start()
 
     def get_servo_angle(self) -> int:
         """
@@ -159,7 +161,7 @@ class Leg:
         if not leg in ["rf", "lf", "rb", "lb"]:
             raise ValueError(f"Invalid leg: {leg}. Must be one of 'rf', 'lf', 'rb', 'lb'.")
 
-        self.thigh: ServoManager = ServoManager(
+        self.thigh: SServo = SServo(
             servo_channel = leg_configurations["channels"]["thigh"],
             min_angle =     leg_configurations["angles"]["min_thigh"],
             max_angle =     leg_configurations["angles"]["max_thigh"],
@@ -168,7 +170,7 @@ class Leg:
             leg =           leg,
             servo_type =    "thigh",
         )
-        self.lower_leg: ServoManager = ServoManager(
+        self.lower_leg: SServo = SServo(
             servo_channel = leg_configurations["channels"]["lower_leg"],
             min_angle =     leg_configurations["angles"]["min_lower_leg"],
             max_angle =     leg_configurations["angles"]["max_lower_leg"],
@@ -177,7 +179,7 @@ class Leg:
             leg =           leg,
             servo_type =    "lower_leg",
         )
-        self.side_axis: ServoManager = ServoManager(
+        self.side_axis: SServo = SServo(
             servo_channel = leg_configurations["channels"]["side_axis"],
             min_angle =     leg_configurations["angles"]["min_side_axis"],
             max_angle =     leg_configurations["angles"]["max_side_axis"],
@@ -187,25 +189,17 @@ class Leg:
             servo_type =    "side_axis",
         )
 
-    def _move_to_nm_position(self, duration_s: float) -> None:
-        self.thigh.move_to_normal(duration_s)
-        self.lower_leg.move_to_normal(duration_s)
-        self.side_axis.move_to_normal(duration_s)
-
-    def move_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed, wait: bool = False) -> None:
+    def set_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
         """
         Moves all servos in the leg to their normal (default) positions. Waits until all servos have finished. (Default = servo_default_normalize_speed)
 
         :return (None): This function does not return a value.
         """
-        self._move_to_nm_position(duration_s)
+        self.thigh.set_to_normal(duration_s)
+        self.lower_leg.set_to_normal(duration_s)
+        self.side_axis.set_to_normal(duration_s)
 
-        if not wait:
-            return
 
-        for servo in [self.thigh, self.lower_leg, self.side_axis]:
-            servo.join()
-
-    def get_servos(self) -> tuple[ServoManager, ServoManager, ServoManager]:
+    def get_servos(self) -> tuple[SServo, SServo, SServo]:
         """Returns a tuple of the three ServoManagers in the leg."""
         return self.thigh, self.lower_leg, self.side_axis

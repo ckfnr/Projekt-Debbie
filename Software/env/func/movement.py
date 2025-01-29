@@ -1,9 +1,12 @@
 import time
 import threading
+
+# Func
 from env.func.servos import Leg
+from env.func.DEBUG import dprint
 
 # Classes
-from env.func.servos import ServoManager
+from env.func.servos import SServo
 
 # Config
 from env.config import config
@@ -16,25 +19,28 @@ class Movement:
         self.leg_left_front: Leg = Leg(leg_configurations=config.leg_configuration_lf,  leg="lf")
         self.leg_left_back: Leg = Leg(leg_configurations=config.leg_configuration_lb,   leg="lb")
 
-        # Define a tuple for easier access to all legs at once
+        # Define a tuple for easier access to all legs and servos at once
         self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
-
-        # # Auto normalize
-        # if config.auto_normalize_at_startup: self.normalize_all_legs()
+        self.all_servos: tuple[SServo, ...] = tuple(servo for leg in self.all_legs for servo in leg.get_servos())
 
     def normalize_all_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
-        all_servos: list[ServoManager] = []
-        print("Moving servos to normal position...")
+        all_servos: list[SServo] = []
+        dprint("Moving servos to normal position...")
 
+        # Set normalposition for all legs
         for leg in self.all_legs:
-            leg.move_to_normal_position(duration_s=duration_s)
+            leg.set_to_normal_position(duration_s=duration_s)
             all_servos.extend(leg.get_servos())
 
-        # Wait for all servos to finish
+        # Move
         for servo in all_servos:
+            servo.start()
+
+        # Wait for all servos to finish
+        for servo in self.all_servos:
             servo.join()
 
-        print("Done!")
+        dprint("Done!")
 
     def walk_forward(self, *, distance_cm: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")

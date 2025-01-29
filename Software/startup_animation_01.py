@@ -1,5 +1,8 @@
+
+# Func
 from env.func.servos import Leg
 from env.func.movement import Movement
+from env.func.DEBUG import dprint
 
 m = Movement()
 d: float = 0.5
@@ -33,6 +36,6 @@ def main() -> None:
         for leg in all_legs:
             leg.thigh.join()
 
-        print("Done!")
+        dprint("Done!")
 
 if __name__ == "__main__": main()

@@ -1,4 +1,6 @@
+# Func
 from env.func.movement import Movement
+from env.func.DEBUG import dprint
 
 m = Movement()
 d: int = 2
@@ -38,4 +40,4 @@ while True:
             servo_map[prefix].start()
             servo_map[prefix].join()
         else:
-            print("Invalid input. Please enter a valid servo input (e.g. 'rf_s = 6')!")
+            dprint("Invalid input. Please enter a valid servo input (e.g. 'rf_s = 6')!")
