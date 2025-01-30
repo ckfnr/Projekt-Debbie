@@ -7,7 +7,7 @@
 
 ## **Description**
 _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with simplicity in mind. Stay tuned for ongoing enhancements!<br>
-Project sponsored by _The Schrack Technik Group_
+💰Project sponsored by _The Schrack Technik Group_
 
 ## Check out
 ### 🎨 Designers:
