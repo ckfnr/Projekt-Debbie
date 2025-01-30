@@ -13,3 +13,7 @@ Project sponsored by _The Schrack Technik Group_
 - [Cesario Kufner](https://github.com/ckfnr)
 - [Louati Momen](https://github.com/louatimomen)
 - [AJ](https://github.com/AJ-Holzer)
+
+## Shout out to Mr.Hühnchen
+Mr.Hühnchen just calculated all calculations needed for Debbie!
+Check him out [here](https://github.com/MrHuehnchen)
