@@ -14,6 +14,7 @@ Project sponsored by _The Schrack Technik Group_
 - [Louati Momen](https://github.com/louatimomen)
 - [AJ](https://github.com/AJ-Holzer)
 
-## Shout out to Mr.Hühnchen
-Mr.Hühnchen just calculated all calculations needed for Debbie!
-Check him out [here](https://github.com/MrHuehnchen)
+## Huge Shoutout to Mr. Hühnchen! 🎉
+A massive thank you to __Mr. Hühnchen__ for calculating __all the computations__ for Debbie!<br>
+💡⚡<br>
+Check him out _[here](https://github.com/MrHuehnchen)_
