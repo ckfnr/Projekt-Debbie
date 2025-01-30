@@ -17,5 +17,4 @@ Project sponsored by _The Schrack Technik Group_
 - [AJ](https://github.com/AJ-Holzer)
 ### Huge Shoutout to [Mr. Hühnchen](https://github.com/MrHuehnchen)! 🎉
 A massive thank you to __Mr. Hühnchen__ for calculating __all the computations__ for Debbie!<br>
-💡⚡<br>
-Check him out!
+💡⚡
