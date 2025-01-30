@@ -13,7 +13,7 @@ Project sponsored by _The Schrack Technik Group_
 ### 🎨 Designers:
 - [Cesario Kufner](https://github.com/ckfnr)
 - [Louati Momen](https://github.com/louatimomen)
-### Programmer:
+### 💻 Programmer:
 - [AJ](https://github.com/AJ-Holzer)
 
 ## Huge Shoutout to Mr. Hühnchen! 🎉
