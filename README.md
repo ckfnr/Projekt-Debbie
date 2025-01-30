@@ -10,8 +10,10 @@ _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with si
 Project sponsored by _The Schrack Technik Group_
 
 ## Check out
+### 🎨 Designers:
 - [Cesario Kufner](https://github.com/ckfnr)
 - [Louati Momen](https://github.com/louatimomen)
+### Programmer:
 - [AJ](https://github.com/AJ-Holzer)
 
 ## Huge Shoutout to Mr. Hühnchen! 🎉
