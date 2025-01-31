@@ -14,6 +14,9 @@
 ##      Do not change any values in this         ##
 ##      section, unless you know exactly         ##
 ##      what you are doing.                      ##
+##                                               ##
+##      Every change you make could              ##
+##      destroy the whole project!               ##
  ##                                             ##
   ##                                           ##
     ###                                     ###
@@ -23,6 +26,11 @@
 
 class Config:
     def __init__(self) -> None:
+        # Colors
+        self.color_reset: str = "\033[0m"
+        self.color_green: str = "\033[32m"
+        self.color_yellow: str = "\033[33m"
+
         # Developer settings
         self.debug: bool = True
 
@@ -30,7 +38,7 @@ class Config:
         self.servo_channel_count: int = 16             # Channel amount of the servo controller
         self.servo_normal_position: int = 90           # Normal position of all servos
         self.servo_default_normalize_speed: float = 3  # How many seconds the servos should need to normalize their position
-        self.auto_normalize_at_startup: bool = True    # If DEBBIE will normalize its servos at startup
+        # self.auto_normalize_at_startup: bool = True    # If DEBBIE will normalize its servos at startup
         self.servo_stopping_treshhold: float = 0.5     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
         self.max_legs: int = 4                         # How many legs DEBBIE has
 

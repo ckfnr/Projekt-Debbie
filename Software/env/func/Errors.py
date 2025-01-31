@@ -3,3 +3,6 @@ class ProgrammingError(Exception):
 
 class NoThreadError(Exception):
     pass
+
+class InvalidOS(Exception):
+    pass

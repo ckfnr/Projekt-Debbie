@@ -3,6 +3,9 @@ import threading
 from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
 from typing import Any, Optional
 
+# Classes
+from Classes import Coordinate
+
 # Func
 from env.func.DEBUG import dprint
 
@@ -10,7 +13,7 @@ from env.func.DEBUG import dprint
 from env.config import config
 
 # Errors
-from env.func.Errors import NoThreadError, ProgrammingError
+from env.func.Errors import NoThreadError
 
 # Initialize servo kit
 try:
@@ -117,6 +120,16 @@ class SServo:
 
         self.servo_thread.start()
 
+    def join(self) -> None:
+        """
+        Joins the servo thread.
+        """
+        if not self.servo_thread:
+            raise NoThreadError(f"There was no thread to join at servo ({self.leg = }, {self.servo_type = })with servo channel '{self.servo_channel}'!")
+
+        self.servo_thread.join()
+        self.servo_thread = None
+
     def set_to_normal(self, duration_s: float) -> None:
         """
         Moves the servo to its normal (default) position.
@@ -132,16 +145,6 @@ class SServo:
         :return (int): The current angle of the servo.
         """
         return self.servo.angle
-    
-    def join(self) -> None:
-        """
-        Joins the servo thread.
-        """
-        if not self.servo_thread:
-            raise NoThreadError(f"There was no thread to join at servo ({self.leg = }, {self.servo_type = })with servo channel '{self.servo_channel}'!")
-
-        self.servo_thread.join()
-        self.servo_thread = None
 
 class Leg:
     """
@@ -150,6 +153,8 @@ class Leg:
     :param leg_configurations (dict[str, dict[str, Any]]): Configuration for the leg's channels, angle variations, and deviations.
     """
     def __init__(self, *, leg_configurations: dict[str, dict[str, Any]], leg: str) -> None:
+        #INFO: Leg is only required for debug purposis
+
         self.required_keys: dict[str, set[str]] = {
             "channels":   {"thigh", "lower_leg", "side_axis"},
             "angles":     {"min_thigh", "max_thigh", "min_lower_leg", "max_lower_leg", "min_side_axis", "max_side_axis"},
@@ -188,6 +193,7 @@ class Leg:
             leg =           leg,
             servo_type =    "side_axis",
         )
+        self.current_position: Coordinate = Coordinate(0, 0, 0)  # Initialize current position to (0, 0, 0) --> Default position
 
     def set_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
         """
@@ -199,7 +205,18 @@ class Leg:
         self.lower_leg.set_to_normal(duration_s)
         self.side_axis.set_to_normal(duration_s)
 
-
     def get_servos(self) -> tuple[SServo, SServo, SServo]:
         """Returns a tuple of the three ServoManagers in the leg."""
         return self.thigh, self.lower_leg, self.side_axis
+
+    def get_current_position(self) -> Coordinate:
+        return self.current_position
+
+    def set_to_coordinate(self) -> None:
+        raise NotImplementedError("This function is not implemented yet!")
+
+    def start(self) -> None:
+        raise NotImplementedError("This function is not implemented yet!")
+    
+    def join(self) -> None:
+        raise NotImplementedError("This function is not implemented yet!")

@@ -1,4 +1,4 @@
-import smbus
+import smbus  #type:ignore
 
 # Errors
 from env.func.Errors import ProgrammingError

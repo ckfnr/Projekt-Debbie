@@ -1,6 +1,3 @@
-import time
-import threading
-
 # Func
 from env.func.servos import Leg
 from env.func.DEBUG import dprint
@@ -23,7 +20,11 @@ class Movement:
         self.all_legs: tuple[Leg, Leg, Leg, Leg] = (self.leg_right_front, self.leg_right_back, self.leg_left_front, self.leg_left_back)
         self.all_servos: tuple[SServo, ...] = tuple(servo for leg in self.all_legs for servo in leg.get_servos())
 
+        dprint(f"{config.color_yellow}NOTE: All functions of the movement class will be created as soon as the coordinate system can be used.{config.color_reset}")
+
     def normalize_all_legs(self, duration_s: float = config.servo_default_normalize_speed) -> None:
+        #! This function has to be updated as soon as the coordinate system can be used
+
         all_servos: list[SServo] = []
         dprint("Moving servos to normal position...")
 
