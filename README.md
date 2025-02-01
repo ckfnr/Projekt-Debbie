@@ -27,6 +27,6 @@ A massive thank you to __Mr. Hühnchen__ for calculating __all the computations_
 <!--
 ## 📦 Installation
 1. To install the whole project on your Raspberry Pi, just run `git clone https://github.com/ckfnr/Projekt-Debbie`.
-2. Run the _main.py_ file
+2. Run the _setup.py_ file
 3. Let the magic work
 -->
