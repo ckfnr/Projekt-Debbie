@@ -31,6 +31,9 @@ class Config:
         self.color_green: str = "\033[32m"
         self.color_yellow: str = "\033[33m"
 
+        # Database settings
+        self.db_file: str = "movement.sqlite3"
+
         # Developer settings
         self.debug: bool = True
 

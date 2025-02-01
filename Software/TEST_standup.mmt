@@ -1,0 +1,53 @@
+// Lower feet
+MOVEMENT-START;
+seconds=2.0;
+rf: x=0.0, y=0.0, z=-5.0;
+rb: x=0.0, y=0.0, z=-5.0;
+lf: x=0.0, y=0.0, z=-5.0;
+lb: x=0.0, y=0.0, z=-5.0;
+MOVEMENT-JOIN;
+
+// Raise feet  
+MOVEMENT-START;
+seconds=2.0;
+rf: x=0.0, y=0.0, z=5.0;
+rb: x=0.0, y=0.0, z=5.0;
+lf: x=0.0, y=0.0, z=5.0;
+lb: x=0.0, y=0.0, z=5.0;
+MOVEMENT-JOIN;
+
+// Move forward
+MOVEMENT-START;
+seconds=1.5;
+rf: x=5.0, y=0.0, z=0.0;
+rb: x=5.0, y=0.0, z=0.0;
+lf: x=5.0, y=0.0, z=0.0;
+lb: x=5.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Move backward
+MOVEMENT-START;
+seconds=1.5;
+rf: x=-5.0, y=0.0, z=0.0;
+rb: x=-5.0, y=0.0, z=0.0;
+lf: x=-5.0, y=0.0, z=0.0;
+lb: x=-5.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Turn left
+MOVEMENT-START;
+seconds=1.0;
+rf: x=-2.5, y=0.0, z=0.0;
+rb: x=2.5, y=0.0, z=0.0;
+lf: x=2.5, y=0.0, z=0.0;
+lb: x=-2.5, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Turn right
+MOVEMENT-START;
+seconds=1.0;
+rf: x=2.5, y=0.0, z=0.0;
+rb: x=-2.5, y=0.0, z=0.0;
+lf: x=-2.5, y=0.0, z=0.0;
+lb: x=2.5, y=0.0, z=0.0;
+MOVEMENT-JOIN;

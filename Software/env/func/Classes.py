@@ -1,3 +1,4 @@
+import ctypes
 from typing import Iterator
 
 class Coordinate:

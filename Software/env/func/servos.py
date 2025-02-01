@@ -77,6 +77,10 @@ class SServo:
         :param nm_action (bool): Flag indicating if this is a 'start to normal' action with fixed steps.
         :raises ValueError: If the target angle is outside the valid range.
         """
+        # Check if the the servo has already reached its target
+        if self.servo.angle == target_angle:
+            time.sleep(duration)
+
         # Adjust target angle for mirroring and deviation
         if self.mirrored:
             adjusted_target = self.max_angle - ((target_angle + self.deviation) - self.min_angle)
