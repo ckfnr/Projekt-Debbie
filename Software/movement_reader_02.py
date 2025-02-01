@@ -2,7 +2,7 @@ import re
 from typing import Any
 from pprint import pprint
 
-movement_file: str = "TEST_standup.mmt"
+movement_file: str = "TEST_movement.mmt"
 
 # Precompiled regex patterns
 seconds_pattern = re.compile(r"seconds=(\d+(\.\d+)?)")
