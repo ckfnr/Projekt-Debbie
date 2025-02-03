@@ -77,6 +77,7 @@ class SServo:
         :param nm_action (bool): Flag indicating if this is a 'start to normal' action with fixed steps.
         :raises ValueError: If the target angle is outside the valid range.
         """
+        #! This function has to be changed as soon as the controller is being used
         # Check if the the servo has already reached its target
         if self.servo.angle == target_angle:
             time.sleep(duration)

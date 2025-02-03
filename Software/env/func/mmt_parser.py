@@ -7,17 +7,15 @@ from env.config import config
 from env.func.Classes import Coordinate
 
 def parse_mmt(file_path: str) -> list[dict[str, float | dict[str, Coordinate]]]:
+    """Parse the MMT file and return a list of dictionaries containing the data."""
     # Precompiled regex patterns
     seconds_pattern = re.compile(r"seconds=(\d+(\.\d+)?)")
     vector_pattern = re.compile(r"(\w+): ([\w=,\.\-\s]+)")
 
     # Load and process data in a single loop
-    # instructions: list[list[float, dict[str, Coordinate]]] = []
-    # current_block: list[float, dict[str, Coordinate]] = []
     instructions: list[dict[str, float | dict[str, Coordinate]]] = []
     current_block: dict[str, float | dict[str, Coordinate]] = {}
     
-
     with open(file_path, "r", encoding="UTF-8") as f:
         for idx, line in enumerate(f, start=1):
             line = line.strip()
@@ -30,7 +28,6 @@ def parse_mmt(file_path: str) -> list[dict[str, float | dict[str, Coordinate]]]:
             line = line.rstrip(";")  # Remove semicolon
 
             if line == "MOVEMENT-START":
-                # current_block = [0.0, {}]
                 current_block = {"duration": 0.0, "coords": {}}
 
             elif line == "MOVEMENT-JOIN":
@@ -42,8 +39,7 @@ def parse_mmt(file_path: str) -> list[dict[str, float | dict[str, Coordinate]]]:
                         raise ValueError(f"Invalid 'vectors' in movement block: {current_block}")
 
                     instructions.append(current_block)
-                    # current_block = [0.0, {}]
-                    current_block = {"duration": 0.0, "coords": {}}
+                    current_block = {}
 
             elif seconds_match := seconds_pattern.match(line):
                 current_block["duration"] = float(seconds_match.group(1))
@@ -68,8 +64,7 @@ def parse_mmt(file_path: str) -> list[dict[str, float | dict[str, Coordinate]]]:
                 current_block["coords"][part.strip()] = Coordinate(vector_data["x"], vector_data["y"], vector_data["z"])
 
     # Final validation for unclosed blocks
-    if current_block != {"duration": 0.0, "coords": {}}:
+    if current_block != {}:
         raise ValueError(f"The last instruction was not parsed successfully! Maybe forgot 'MOVEMENT-JOIN;'? Last block: {current_block}")
 
-    # return [(instr["duration"], instr["coords"]) for instr in instructions]
     return instructions
