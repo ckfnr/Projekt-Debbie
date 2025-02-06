@@ -1,8 +1,6 @@
-from pprint import pprint
+from env.func.calculations import calc_coordinate
 
-# Func
-from env.func.mmt_parser import parse_mmt
+max_points: int = 50
 
-instructions = parse_mmt("TEST_movement.mmt")
-
-pprint([i for i in instructions])
+for i in range(max_points+1):
+    print(calc_coordinate(step_width=i, angle=0, max_points=50, point=10))

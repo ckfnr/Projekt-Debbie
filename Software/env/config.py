@@ -41,9 +41,11 @@ class Config:
         self.servo_channel_count: int = 16             # Channel amount of the servo controller
         self.servo_normal_position: int = 90           # Normal position of all servos
         self.servo_default_normalize_speed: float = 3  # How many seconds the servos should need to normalize their position
-        # self.auto_normalize_at_startup: bool = True    # If DEBBIE will normalize its servos at startup
         self.servo_stopping_treshhold: float = 0.5     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
         self.max_legs: int = 4                         # How many legs DEBBIE has
+
+        # Coordinate calculation settings
+        self.number_a: float = -0.5                    # Multiplier for the radius of the circle movement
 
         # Leg configurations
         # All values have to be integer!!!

@@ -21,7 +21,7 @@ class Coordinate:
     def __mul__(self, other: 'Coordinate') -> 'Coordinate':     return Coordinate(self.x * other.x, self.y * other.y, self.z * other.z)
     def __truediv__(self, other: 'Coordinate') -> 'Coordinate': return Coordinate(self.x / other.x, self.y / other.y, self.z / other.z)
     def __iter__(self) -> Iterator:                             return iter([self.x, self.y, self.z])
-    def __str__(self) -> str:                                   return f"x={self.x}, y={self.y}, z={self.z}"
+    def __str__(self) -> str:                                   return f"x={round(self.x, 1)}, y={round(self.y, 1)}, z={round(self.z, 1)}"
     def __repr__(self) -> str:                                  return f"Coordinate(x={self.x}, y={self.y}, z={self.z})"
 
     # Equality check for comparing coordinates
