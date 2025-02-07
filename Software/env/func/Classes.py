@@ -1,6 +1,9 @@
 import ctypes
 from typing import Iterator
 
+# Func
+from env.func.DEBUG import dprint
+
 class Coordinate:
     def __init__(self, x: float, y: float, z: float) -> None:
         """Initialize a 3D coordinate with x, y, and z values.\nUnit: mm"""
@@ -35,6 +38,6 @@ class Coordinate:
 
 # TEST
 if __name__ == "__main__":
-    print(" | ".join(str(i) for i in set([Coordinate(1, 2, 3), Coordinate(1, 2, 4), Coordinate(1, 2, 3)])))
-    print(Coordinate(1, 2, 3) * Coordinate(1, 2, 3))
-    print(Coordinate(1, 2, 3))
+    dprint(" | ".join(str(i) for i in set([Coordinate(1, 2, 3), Coordinate(1, 2, 4), Coordinate(1, 2, 3)])))
+    dprint(Coordinate(1, 2, 3) * Coordinate(1, 2, 3))
+    dprint(Coordinate(1, 2, 3))

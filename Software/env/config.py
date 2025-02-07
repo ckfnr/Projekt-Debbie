@@ -47,6 +47,14 @@ class Config:
         # Coordinate calculation settings
         self.number_a: float = -0.5                    # Multiplier for the radius of the circle movement
 
+        # Gyroscope general (default)
+        self.deviation_x: float = -103.3
+        self.deviation_y: float = 1.6
+        self.deviation_z: float = -2.1
+
+        # Decorator config
+        self.max_lru_cache: int = 50                   # The maximum amount of cache entries for the lru decorator
+
         # Leg configurations
         # All values have to be integer!!!
         self.leg_configuration_rf: dict[str, dict[str, int]] = {
@@ -149,10 +157,5 @@ class Config:
                 "side_axis": False,
             }
         }
-
-        # Gyroscope general (default)
-        self.deviation_x: float = -103.3
-        self.deviation_y: float = 1.6
-        self.deviation_z: float = -2.1
 
 config = Config()

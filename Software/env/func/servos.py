@@ -135,22 +135,9 @@ class SServo:
         self.servo_thread.join()
         self.servo_thread = None
 
-    def set_to_normal(self, duration_s: float) -> None:
-        """
-        Moves the servo to its normal (default) position.
-
-        :return (threading.Thread): The thread executing the movement.
-        """
-        self.set((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
-
-    def get_servo_angle(self) -> int:
-        """
-        Retrieves the current angle of the servo.
-
-        :return (int): The current angle of the servo.
-        """
-        return self.servo.angle
-
+    def set_to_normal(self, duration_s: float) -> None: self.set((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
+    def get_servo_angle(self) -> int:                   return self.servo.angle
+ 
 class Leg:
     """
     Manages a robotic leg composed of three servos: thigh, lower leg, and side axis.

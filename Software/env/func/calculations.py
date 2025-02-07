@@ -1,5 +1,4 @@
 from numpy import sin, cos, tan, asin, acos, atan, radians, degrees
-from functools import lru_cache
 
 # Config
 from env.config import config
@@ -7,40 +6,43 @@ from env.config import config
 # Classes
 from env.func.Classes import Coordinate
 
-# Convert sin, cos, tan, asin, acos, atan
-@lru_cache(maxsize=50)
-def _rad(num: float) -> float: return radians(num)
-@lru_cache(maxsize=50)
-def _deg(num: float) -> float: return degrees(num)
-@lru_cache(maxsize=50)
-def _sin(num: float) -> float: return sin(_rad(num))
-@lru_cache(maxsize=50)
-def _cos(num: float) -> float: return cos(_rad(num))
-@lru_cache(maxsize=50)
-def _tan(num: float) -> float: return tan(_rad(num))
-@lru_cache(maxsize=50)
-def _asin(num: float) -> float: return _deg(asin(num))
-@lru_cache(maxsize=50)
-def _acos(num: float) -> float: return _deg(acos(num))
-@lru_cache(maxsize=50)
-def _atan(num: float) -> float: return _deg(atan(num))
+# Decorators
+from env.func.decorators import cached
 
-@lru_cache(maxsize=50)
-def calc_circle_coordinates(step_width: float, coordinate_count: int, center_multiplier: float) -> list[Coordinate]:
+# Convert sin, cos, tan, asin, acos, atan
+@cached
+def _rad(num: float) -> float:  return radians(num)
+@cached
+def _deg(num: float) -> float:  return degrees(num)
+@cached
+def _sin(num: float) -> float:  return sin(_rad(num))
+@cached
+def _cos(num: float) -> float:  return cos(_rad(num))
+# @cached
+# def _tan(num: float) -> float:  return tan(_rad(num))
+@cached
+def _asin(num: float) -> float: return _deg(asin(num))
+# @cached
+# def _acos(num: float) -> float: return _deg(acos(num))
+# @cached
+# def _atan(num: float) -> float: return _deg(atan(num))
+
+@cached
+def calc_circle_coordinates(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float = config.number_a) -> list[Coordinate]:
     """
     Calculates the coordinates of a circle with a specified step width and coordinate count.
     
     :param centert_multiplier (float): The multiplier of how much the center of the circle will be moved down. (param 'a' in the maths-pdf)
     """
-    raise NotImplementedError("This function is not implemented yet!")
+    return [calc_coordinate(step_width=step_width, angle=angle, max_points=max_points, point=point, circle_multiplier=circle_multiplier) for point in range(max_points+1)]
 
-@lru_cache(maxsize=50)
+@cached
 def calc_ll_t_servo_angles(coordinate: Coordinate) -> tuple[int, int]:
     """Calculates the lower_leg and thigh servo angles."""
     raise NotImplementedError("This function is not implemented yet!")
 
-@lru_cache(maxsize=50)
-def calc_coordinate(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float = config.number_a) -> Coordinate:
+@cached
+def calc_coordinate(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float) -> Coordinate:
     """
     Calculates a 3D coordinate based on a step width, angle, and a given point index.
 
@@ -63,7 +65,6 @@ def calc_coordinate(step_width: float, angle: float, max_points: int, point: int
     """
     c1: float = ( (step_width**2) / (4-4*circle_multiplier**2) )**0.5
     c2: float = abs(_asin(circle_multiplier))
-
     block: float = (180*point - c2*(2*point-max_points)) / (max_points)
 
     x: float = -( c1 * _cos(angle) * _cos(block) )
