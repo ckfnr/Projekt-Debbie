@@ -1,10 +1,10 @@
 import time
-import threading
+from threading import Lock, Thread
 from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
 from typing import Any, Optional
 
 # Classes
-from env.func.Classes import Coordinate
+from Classes import Coordinate, AngleInt, AngleFloat
 
 # Func
 from env.func.DEBUG import dprint
@@ -15,17 +15,9 @@ from env.config import config
 # Errors
 from env.func.Errors import NoThreadError
 
-def initialize_servos() -> None:
-    # Set each servo to its neutral position (adjust based on your logic)
-    for i in range(config.servo_channel_count):
-        # servo_kit.servo[i].angle = config.servo_normal_position  # Assuming you have this defined as a safe starting position
-        servo_kit.servo[i].angle = servo_kit.servo[i].angle
-        time.sleep(0.1)  # Add a small delay to avoid abrupt movements
-
 # Initialize servo kit
 try:
     servo_kit: ServoKit = ServoKit(channels=config.servo_channel_count)
-    initialize_servos()  # Safe initialization of servos
 except Exception as e:
     raise RuntimeError(f"Failed to initialize ServoKit: {e}")
 
@@ -66,15 +58,16 @@ class SServo:
         self.servo: Servo = servo_kit.servo[servo_channel]
         self.servo_channel: int = servo_channel
         self.deviation: int = deviation
-        self.min_angle: int = min_angle + deviation
-        self.max_angle: int = max_angle + deviation
-        self.adjusted_normal_position: int = config.servo_normal_position + deviation
-        self.calculation_angle: float = self.adjusted_normal_position
+        self.min_angle: AngleInt = AngleInt(angle=min_angle, deviation=deviation)
+        self.max_angle: AngleInt = AngleInt(angle=max_angle, deviation=deviation)
+        self.adjusted_normal_position: AngleInt = AngleInt(angle=config.servo_normal_position, deviation=deviation)
+        self.calculation_angle: AngleFloat = self.adjusted_normal_position.conv_to_anglefloat()
         self.mirrored: bool = mirrored
-        self.lock: threading.Lock = threading.Lock()
-        self.servo_thread: Optional[threading.Thread] = None
+        self.lock: Lock = Lock()
+        self.servo_thread: Optional[Thread] = None
         self.leg: str = leg
         self.servo_type: str = servo_type
+        self.range: tuple[int, int] = (0, self.servo.actuation_range)
 
     def set(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
         """
@@ -86,46 +79,65 @@ class SServo:
         :raises ValueError: If the target angle is outside the valid range.
         """
         #! This function has to be changed as soon as the controller is being used
+        #ToDo: Fix bugs
+        self.target_angle: AngleInt = AngleInt(angle=target_angle, deviation=self.deviation)
+        adjusted_target: AngleInt
+
         # Check if the the servo has already reached its target
         if self.servo.angle == target_angle:
             time.sleep(duration)
 
         # Adjust target angle for mirroring and deviation
         if self.mirrored:
-            adjusted_target = self.max_angle - ((target_angle + self.deviation) - self.min_angle)
+            adjusted_target = self.max_angle - (self.target_angle - self.min_angle)  #? Why calc +deviation?
         else:
-            adjusted_target = target_angle + self.deviation
+            # adjusted_target = target_angle + self.deviation
+            adjusted_target = self.target_angle
+
+        # Check if the adjusted target angle is in the range of the servo
+        if not self.range[0] <= int(adjusted_target) <= self.range[1]:
+            raise ValueError(f"Invalid angle: {int(adjusted_target)}. Servo supports angles between {self.range[0]} and {self.range[1]}.")
 
         # Validate the adjusted target angle
         if not self.min_angle <= adjusted_target <= self.max_angle:
-            raise ValueError(f"Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
+            raise ValueError(f"Invalid angle: {adjusted_target}. Allowed range is from {self.min_angle} to {self.max_angle}.")
 
         # Determine steps and step difference
         current_angle = self.servo.angle if self.servo.angle is not None else self.adjusted_normal_position
         steps = 50 if nm_action else max(1, abs(int(adjusted_target - current_angle)))
-        step_difference = (adjusted_target - current_angle) / steps
+        step_difference = int(adjusted_target - current_angle) / steps
 
         # Debug logging
-        dprint(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, Current Angle: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
+        dprint(f"Leg: {self.leg}, Servo: {self.servo_type}, Target: {target_angle}, Adjusted Target: {adjusted_target}, Current AngleInt: {current_angle}, Steps: {steps}, Step Difference: {step_difference:.2f}")
 
         def move_to_target() -> None:
             nonlocal current_angle
+            # next_angle: AngleFloat
+
             with self.lock:
-                while abs(adjusted_target - current_angle) > config.servo_stopping_treshhold:
-                    next_angle = current_angle + step_difference
-                    if not self.min_angle <= round(next_angle, 0) <= self.max_angle:
+                # If there is no duration, just set the final target angle
+                if duration == 0:
+                    self.servo.angle = adjusted_target
+                    return
+
+                # Move to the final target angle within the provided time
+                while abs(int(adjusted_target - current_angle)) > config.servo_stopping_treshhold:
+                    # next_angle = current_angle + step_difference
+                    next_angle: AngleFloat = current_angle.add_float(step_difference)
+                    if not self.min_angle <= next_angle.round(ndigits=0) <= self.max_angle:
                         dprint(f"WARNING: Next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
                         break
 
                     current_angle = next_angle
-                    self.servo.angle = round(current_angle)
+                    # self.servo.angle = round(current_angle)
+                    self.servo.angle = current_angle.round(0)
                     time.sleep(duration / steps)
                 
                 # Final adjustment to ensure we reach the exact target
-                self.servo.angle = round(adjusted_target)
+                self.servo.angle = adjusted_target
 
         # Create and start the movement thread
-        self.servo_thread = threading.Thread(target=move_to_target, daemon=True)
+        self.servo_thread = Thread(target=move_to_target, daemon=True)
 
     def start(self) -> None:
         if not self.servo_thread:
@@ -143,7 +155,7 @@ class SServo:
         self.servo_thread.join()
         self.servo_thread = None
 
-    def set_to_normal(self, duration_s: float) -> None: self.set((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
+    def set_to_normal(self, duration_s: float) -> None: self.set(self.adjusted_normal_position.get_original_angle(), duration_s, nm_action=True)
     def get_servo_angle(self) -> int:                   return self.servo.angle
  
 class Leg:
@@ -205,15 +217,27 @@ class Leg:
         self.lower_leg.set_to_normal(duration_s)
         self.side_axis.set_to_normal(duration_s)
 
+    def set_to_coordinate(self, coordinate: Coordinate) -> None:
+        """
+        Moves all servos in the leg to the specified position. Waits until all servos have finished.
+        
+        :param coordinate: The position to move to.
+        :return (None): This function does not return a value.
+        """
+        raise NotImplementedError("This function is not implemented yet!")
+        angle_thigh: int = 90
+        angle_lower_leg: int = 90
+        angle_side_axis: int = 90
+        # self.thigh.set_to_angle(angle_thigh, coordinate.x, coordinate.y, coordinate.z)
+        # self.lower_leg.set_to_angle(angle_lower_leg, coordinate.x, coordinate.y, coordinate.z)
+        # self.side_axis.set_to_angle(angle_side_axis, coordinate.x, coordinate.y, coordinate.z)
+
     def get_servos(self) -> tuple[SServo, SServo, SServo]:
         """Returns a tuple of the three ServoManagers in the leg."""
         return self.thigh, self.lower_leg, self.side_axis
 
     def get_current_position(self) -> Coordinate:
         return self.current_position
-
-    def set_to_coordinate(self) -> None:
-        raise NotImplementedError("This function is not implemented yet!")
 
     def start(self) -> None:
         raise NotImplementedError("This function is not implemented yet!")
