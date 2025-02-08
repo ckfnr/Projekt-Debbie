@@ -1,21 +1,20 @@
 import time
 import io
 from flask import Flask, Response
-from picamera import PiCamera
+from picamera2 import Picamera2
 
 app = Flask(__name__)
 
-# Set up the PiCamera
-camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 60  # Desired FPS
+# Set up the PiCamera2
+camera = Picamera2()
+camera.configure(camera.create_video_configuration(main={'size': (640, 480)}))
+camera.start()
 
 def generate_frames():
-    stream = io.BytesIO()
-    for _ in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
-        stream.seek(0)
-        frame = stream.read()
-        stream.truncate(0)
+    while True:
+        frame = camera.capture_array()
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
         
         # Yield the frame in a format that Flask can use for streaming
         yield (b'--frame\r\n'
