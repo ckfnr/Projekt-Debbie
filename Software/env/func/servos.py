@@ -15,9 +15,15 @@ from env.config import config
 # Errors
 from env.func.Errors import NoThreadError
 
+def initialize_servos() -> None:
+    # Set each servo to its neutral position (adjust based on your logic)
+    for i in range(config.servo_channel_count):
+        servo_kit.servo[i].angle = config.servo_normal_position  # Assuming you have this defined as a safe starting position
+
 # Initialize servo kit
 try:
     servo_kit: ServoKit = ServoKit(channels=config.servo_channel_count)
+    initialize_servos()  # Safe initialization of servos
 except Exception as e:
     raise RuntimeError(f"Failed to initialize ServoKit: {e}")
 
