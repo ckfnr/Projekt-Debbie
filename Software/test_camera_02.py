@@ -37,7 +37,22 @@ def set_resolution(res):
     if res in resolutions:
         current_resolution = res
         threading.Thread(target=configure_camera, args=(res,)).start()
-    return f"Resolution changed to {resolutions[res]}"
+    return render_template_string('''
+    <html>
+    <head>
+        <style>
+            body { text-align: center; background-color: black; color: white; font-family: Arial, sans-serif; }
+            img { width: 80%; border: 2px solid white; }
+            .buttons { margin-top: 20px; }
+            button { margin: 5px; padding: 10px; font-size: 16px; }
+        </style>
+    </head>
+    <body>
+        <h1>Live Camera Stream</h1>
+        <img src='/video_feed' />
+    </body>
+    </html>
+    ''')
 
 @app.route('/')
 def index():
