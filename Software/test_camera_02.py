@@ -30,7 +30,31 @@ def resources():
 
 @app.route('/')
 def index():
-    return "<h1>Raspberry Pi Camera Stream</h1><img src='/video_feed' width='640' height='480'/>"
+    return """
+    <html>
+    <head>
+        <style>
+            body {
+                margin: 0;
+                background-color: black;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+            img {
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <img src='/video_feed' />
+    </body>
+    </html>
+    """
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
