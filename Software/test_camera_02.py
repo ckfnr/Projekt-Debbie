@@ -5,7 +5,7 @@ import io
 
 app = Flask(__name__)
 picam2 = Picamera2()
-picam2.configure(picam2.create_video_configuration(main={"size": (640, 480), "format": "RGB888"}, controls={"FrameRate": 60}))
+picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}, controls={"FrameRate": 60}))
 picam2.start()
 
 
