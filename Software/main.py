@@ -1,6 +1,8 @@
-# Project DEBBIE
+from env.func.movement import Movement
 
 def main() -> None:
-    raise NotImplementedError("This function is not implemented yet!")
+    m = Movement()
+
+    m.normalize_all_legs()
 
 if __name__ == "__main__": main()

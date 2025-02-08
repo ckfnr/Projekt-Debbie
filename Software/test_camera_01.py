@@ -1,7 +1,8 @@
 import time
 import io
+import cv2
 from flask import Flask, Response
-from picamera2 import Picamera2
+from picamera2 import Picamera2  #type:ignore
 
 app = Flask(__name__)
 
@@ -12,13 +13,14 @@ camera.start()
 
 def generate_frames():
     while True:
-        frame = camera.capture_array()
+        frame = picam2.capture_array()
+        frame = cv2.rotate(frame, cv2.ROTATE_180)  # Rotate 180 degrees
+
         _, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        
-        # Yield the frame in a format that Flask can use for streaming
+        frame_bytes = buffer.tobytes()
+
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
