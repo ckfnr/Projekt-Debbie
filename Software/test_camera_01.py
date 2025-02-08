@@ -1,35 +1,25 @@
-import cv2
 import time
+import io
 from flask import Flask, Response
+from picamera import PiCamera
 
 app = Flask(__name__)
 
-# Set up the camera (0 for the default camera, or change it to the desired camera index)
-camera = cv2.VideoCapture(0)
-fps = 60  # Desired FPS
-delay = 1 / fps  # Time delay between frames
-
-# Set the camera FPS
-camera.set(cv2.CAP_PROP_FPS, fps)
+# Set up the PiCamera
+camera = PiCamera()
+camera.resolution = (640, 480)
+camera.framerate = 60  # Desired FPS
 
 def generate_frames():
-    while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            # Rotate the frame 180 degrees
-            frame = cv2.rotate(frame, cv2.ROTATE_180)
-            
-            # Encode the frame in JPEG format
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            
-            # Yield the frame in a format that Flask can use for streaming
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    stream = io.BytesIO()
+    for _ in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
+        stream.seek(0)
+        frame = stream.read()
+        stream.truncate(0)
         
-        time.sleep(delay)  # Maintain the desired FPS
+        # Yield the frame in a format that Flask can use for streaming
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
