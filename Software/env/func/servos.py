@@ -4,7 +4,7 @@ from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
 from typing import Any, Optional
 
 # Classes
-from Classes import Coordinate
+from env.Classes import Coordinate
 
 # Func
 from env.func.DEBUG import dprint
