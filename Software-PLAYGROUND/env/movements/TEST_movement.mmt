@@ -1,0 +1,86 @@
+//NOTE: This is made by BlyatGPT. Do NOT use!
+
+
+
+
+
+// Lift right front and left back foot
+MOVEMENT-START;
+seconds=1.5;
+rf: x=0.0, y=0.0, z=5.0;
+rb: x=0.0, y=0.0, z=0.0;
+lf: x=0.0, y=0.0, z=0.0;
+lb: x=0.0, y=0.0, z=5.0;
+MOVEMENT-JOIN;
+
+// Move lifted feet forward
+MOVEMENT-START;
+seconds=1.0;
+rf: x=3.0, y=0.0, z=5.0;
+rb: x=0.0, y=0.0, z=0.0;
+lf: x=0.0, y=0.0, z=0.0;
+lb: x=3.0, y=0.0, z=5.0;
+MOVEMENT-JOIN;
+
+// Lower right front and left back foot
+MOVEMENT-START;
+seconds=1.5;
+rf: x=3.0, y=0.0, z=0.0;
+rb: x=0.0, y=0.0, z=0.0;
+lf: x=0.0, y=0.0, z=0.0;
+lb: x=3.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Lift left front and right back foot
+MOVEMENT-START;
+seconds=1.5;
+rf: x=0.0, y=0.0, z=0.0;
+rb: x=0.0, y=0.0, z=5.0;
+lf: x=0.0, y=0.0, z=5.0;
+lb: x=0.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Move lifted feet forward
+MOVEMENT-START;
+seconds=1.0;
+rf: x=0.0, y=0.0, z=0.0;
+rb: x=3.0, y=0.0, z=5.0;
+lf: x=3.0, y=0.0, z=5.0;
+lb: x=0.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Lower left front and right back foot
+MOVEMENT-START;
+seconds=1.5;
+rf: x=0.0, y=0.0, z=0.0;
+rb: x=3.0, y=0.0, z=0.0;
+lf: x=3.0, y=0.0, z=0.0;
+lb: x=0.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Diagonal movement forward-right
+MOVEMENT-START;
+seconds=1.5;
+rf: x=3.0, y=0.0, z=0.0;
+rb: x=0.0, y=0.0, z=0.0;
+lf: x=0.0, y=0.0, z=0.0;
+lb: x=3.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Turn 90 degrees right
+MOVEMENT-START;
+seconds=1.0;
+rf: x=2.5, y=0.0, z=0.0;
+rb: x=-2.5, y=0.0, z=0.0;
+lf: x=-2.5, y=0.0, z=0.0;
+lb: x=2.5, y=0.0, z=0.0;
+MOVEMENT-JOIN;
+
+// Move forward after turn
+MOVEMENT-START;
+seconds=1.5;
+rf: x=5.0, y=0.0, z=0.0;
+rb: x=5.0, y=0.0, z=0.0;
+lf: x=5.0, y=0.0, z=0.0;
+lb: x=5.0, y=0.0, z=0.0;
+MOVEMENT-JOIN;
