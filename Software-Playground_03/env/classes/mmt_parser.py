@@ -44,7 +44,7 @@ class Parser:
                     if not current_block:
                         raise ValueError(f"Line {idx} is not part of a movement.")
                     if not isinstance(current_block["duration"], float) or current_block["duration"] <= 0:
-                        raise ValueError(f"Invalid duration in movement, line {idx}! Got '{current_block.get("duration", None)}'; expected a positive number grater than 0.")
+                        raise ValueError(f"Invalid duration in movement, line {idx}! Got '{current_block.get('duration', None)}'; expected a positive number grater than 0.")
                     if not all(isinstance(current_block[leg], Coordinate) for leg in ["rf", "rb", "lf", "lb"]):
                         raise ValueError(f"Invalid leg in movement, line {idx}! Got 'None'; expected a Coordinate object.")
                     
