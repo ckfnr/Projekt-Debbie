@@ -1,4 +1,4 @@
-from numpy import sin, cos, tan, asin, acos, atan, radians, degrees
+from numpy import sin, cos, tan, arcsin, arccos, arctan, radians, degrees
 
 # Config
 from env.config import config
@@ -9,7 +9,7 @@ from env.classes.Classes import Coordinate
 # Decorators
 from env.decr.decorators import cached
 
-# Convert sin, cos, tan, asin, acos, atan
+# Convert sin, cos, tan, arcsin, arccos, arctan
 @cached
 def _rad(num: float) -> float:  return radians(num)
 @cached
@@ -21,11 +21,11 @@ def _cos(num: float) -> float:  return cos(_rad(num))
 # @cached
 # def _tan(num: float) -> float:  return tan(_rad(num))
 @cached
-def _asin(num: float) -> float: return _deg(asin(num))
+def _asin(num: float) -> float: return _deg(arcsin(num))
 # @cached
-# def _acos(num: float) -> float: return _deg(acos(num))
+# def _acos(num: float) -> float: return _deg(arccos(num))
 # @cached
-# def _atan(num: float) -> float: return _deg(atan(num))
+# def _atan(num: float) -> float: return _deg(arctan(num))
 
 @cached
 def calc_circle_coordinates(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float = config.number_a) -> list[Coordinate]:
