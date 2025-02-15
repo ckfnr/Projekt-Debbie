@@ -64,7 +64,7 @@ class Config:
         self.coordinate_pattern: Pattern = compile(r"(\w+): ([\w=,\.\-\s]+)")
         self.wait_pattern: Pattern = compile(r"WAIT=\s*(-?\d*\.\d+|\d+\.?)\s*")
         self.mmt_default_path: str = "movements"
-        self.instruction_types = Literal["wait", "move"]
+        self.auto_parse_startup: bool = True
 
         # Leg configurations
         # All values have to be integer!!!

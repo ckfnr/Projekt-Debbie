@@ -28,14 +28,11 @@ def index():
     <html>
     <head>
         <style>
-            body { text-align: center; background-color: black; color: white; font-family: Arial, sans-serif; }
-            img { width: 50%; border: 2px solid white; }
-            .buttons { margin-top: 20px; }
-            button { margin: 5px; padding: 10px; font-size: 16px; }
+            body { margin: 0; overflow: hidden; background-color: black; }
+            img { width: 100vw; height: 100vh; object-fit: cover; display: block; }
         </style>
     </head>
     <body>
-        <h1>Live Camera Stream</h1>
         <img src='/video_feed' />
     </body>
     </html>

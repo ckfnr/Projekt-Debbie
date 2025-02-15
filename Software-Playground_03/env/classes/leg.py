@@ -12,7 +12,7 @@ from env.decr.decorators import cached
 # Func
 from env.func.DEBUG import dprint
 from env.func.calculations import calc_servo_angles
-from env.func.leg_helper import initialize_servos, adjust_angle, validate_dict
+from env.func.leg_helper import initialize_servos, adjust_angle
 
 # Config
 from env.config import config
@@ -141,7 +141,6 @@ class Leg:
             "deviations": {"thigh", "lower_leg", "side_axis"},
             "mirrored":   {"thigh", "lower_leg", "side_axis"},
         }
-        validate_dict(self.required_keys, leg_configurations)
 
         if not leg in ["rf", "lf", "rb", "lb"]:
             raise ValueError(f"Invalid leg: {leg}. Must be one of 'rf', 'lf', 'rb', 'lb'.")
@@ -173,7 +172,7 @@ class Leg:
             leg =           leg,
             servo_type =    "side_axis",
         )
-        self.current_position: Coordinate = Coordinate(0, 0, 0)  # Initialize current position to (0, 0, 0) --> Default position
+        self.current_position: Coordinate = Coordinate(0.0, 0.0, 0.0)  # Initialize current position to (0, 0, 0) --> Default position
         self.all_servos: tuple[SServo, SServo, SServo] = (self.thigh, self.lower_leg, self.side_axis)
 
     @cached
