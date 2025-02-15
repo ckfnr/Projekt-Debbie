@@ -24,11 +24,11 @@ def adjust_angle(is_mirrored: bool, max_angle: int, angle: int, deviation: int, 
 
 @cached
 @validate_types
-def validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) -> None:
+def validate_dict(required_keys: dict[str, list], dictionary: dict[str, Any]) -> None:
     """
     Validates whether a dictionary contains all required keys and subkeys.
 
-    :param required_keys (dict[str, set]): Dictionary specifying required keys and their expected subkeys.
+    :param required_keys (dict[str, list]): Dictionary specifying required keys and their expected subkeys.
     :param dictionary (dict[str, Any]): The dictionary to validate.
     :raises ValueError: If any required key or subkey is missing.
     """
@@ -36,6 +36,6 @@ def validate_dict(required_keys: dict[str, set], dictionary: dict[str, Any]) -> 
     for key, subkeys in required_keys.items():
         if key not in dictionary or not isinstance(dictionary[key], dict):
             raise ValueError(f"'{key}' must be a dictionary containing {subkeys}.")
-        missing_keys = subkeys - dictionary[key].keys()
+        missing_keys = set(subkeys) - set(dictionary[key].keys())
         if missing_keys:
             raise ValueError(f"'{key}' is missing required keys: {missing_keys}.")
