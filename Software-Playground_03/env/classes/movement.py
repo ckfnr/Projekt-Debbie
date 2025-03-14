@@ -7,9 +7,10 @@ from env.func.DEBUG import dprint
 # Classes
 from env.classes.leg import SServo
 from env.classes.mmt_parser import Parser
+from env.classes.Classes import Coordinate
 
 # Decorators
-from env.decr.decorators import validate_types_class, validate_types
+from env.decr.decorators import validate_types
 
 # Config
 from env.config import config
@@ -63,9 +64,9 @@ class Movement:
         dprint("Done!")
 
     @validate_types
-    def execute(self, mmt: str) -> None:
+    def execute_mmt(self, mmt_name: str) -> None:
         #! Has to be changed
-        for instruction in self.parser.get_instructions(os.path.join(config.mmt_default_path, f"{mmt}.mmt")):
+        for instruction in self.parser.get_instructions(os.path.join(config.mmt_default_path, f"{mmt_name}.mmt")):
             for leg, coord in instruction.keys():
                 # Pass duration
                 if leg == "duration": continue
@@ -91,13 +92,16 @@ class Movement:
         raise NotImplementedError("This function is not implemented yet!")
 
     @validate_types
-    def turn_around(self, *, angle: float, duration_s: float) -> None:
+    def turn_clockwise(self, *, angle: float, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
 
+    #? Maybe remove this function
     @validate_types
     def climb_stair(self, *, stair_height_cm: float, stair_width_cm: float, stair_count: int, duration_s: float) -> None:
         raise NotImplementedError("This function is not implemented yet!")
 
     @validate_types
-    def lift_body(self, *, floor_distance_cm: float, duration_s: float) -> None:
-        raise NotImplementedError("This function is not implemented yet!")
+    def adjust_height_body(self, *, distance_cm: float, duration_s: float) -> None:
+        for leg in self.all_legs:
+            current_coordinate: Coordinate = leg.get_current_position()
+            leg.set_to_coordinate(coordinate=current_coordinate.adjust_z(value=distance_cm), duration_s=duration_s)

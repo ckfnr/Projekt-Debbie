@@ -6,6 +6,9 @@ from env.err.Errors import ProgrammingError
 # Config
 from env.config import config
 
+# Decorators
+from env.decr.decorators import validate_types
+
 class Gyro:
     def __init__(self) -> None:
         # MPU6050 Registers and their Address
@@ -49,6 +52,7 @@ class Gyro:
             value -= 65536
         return value
 
+    @validate_types
     def get_accel_data(self, axis: str) -> float:
         """Gets the acceleration data from the MPU6050 sensor."""
         if axis == 'x':

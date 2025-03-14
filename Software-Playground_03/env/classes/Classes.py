@@ -1,8 +1,4 @@
-from time import sleep
-from typing import Iterator, Literal, Any
-
-# Config
-from env.config import config
+from typing import Iterator
 
 # Func
 from env.func.DEBUG import dprint
@@ -11,12 +7,17 @@ from env.func.DEBUG import dprint
 from env.decr.decorators import validate_types
 
 class Coordinate:
+    """Coordinate object containing xyz of a coordinate."""
+    # Prevent from making dynamic __dict__
+    __slots__: tuple[str, str, str, str] = ("x", "y", "z", "_hash")
+
     @validate_types
     def __init__(self, x: float, y: float, z: float) -> None:
         """Initialize a 3D coordinate with x, y, and z values.\nUnit: mm"""
-        self.x: float = float(x)
-        self.y: float = float(y)
-        self.z: float = float(z)
+        self.x: float = x
+        self.y: float = y
+        self.z: float = z
+        self._hash = hash((self.x, self.y, self.z))
 
     def get_m(self) -> tuple[float, float, float]:   return self.x/1000, self.y/1000, self.z/1000
     def get_dm(self) -> tuple[float, float, float]:  return self.x/100, self.y/100, self.z/100
@@ -24,21 +25,15 @@ class Coordinate:
     def get_mm(self) -> tuple[float, float, float]:  return self.x, self.y, self.z
     def get_xyz(self) -> tuple[float, float, float]: return self.x, self.y, self.z
 
-    def update(self, x: float, y: float, z: float) -> None: self.x, self.y, self.z = float(x), float(y), float(z)
+    @validate_types
+    def update(self, x: float, y: float, z: float) -> None: self.x, self.y, self.z, self._hash = x, y, z, hash((x, y, z))
 
-    def __add__(self, other: 'Coordinate') -> 'Coordinate':     return Coordinate(self.x + other.x, self.y + other.y, self.z + other.z)
-    def __sub__(self, other: 'Coordinate') -> 'Coordinate':     return Coordinate(self.x - other.x, self.y - other.y, self.z - other.y)
-    def __mul__(self, other: 'Coordinate') -> 'Coordinate':     return Coordinate(self.x * other.x, self.y * other.y, self.z * other.z)
-    def __truediv__(self, other: 'Coordinate') -> 'Coordinate': return Coordinate(self.x / other.x, self.y / other.y, self.z / other.z)
-    def __iter__(self) -> Iterator:                             return iter([self.x, self.y, self.z])
-    def __str__(self) -> str:                                   return f"x={round(self.x, 1)}, y={round(self.y, 1)}, z={round(self.z, 1)}"
-    def __repr__(self) -> str:                                  return f"Coordinate(x={self.x}, y={self.y}, z={self.z})"
+    @validate_types
+    def adjust_x(self, value: float) -> None: self.x += value
+    @validate_types
+    def adjust_y(self, value: float) -> None: self.y += value
+    @validate_types
+    def adjust_z(self, value: float) -> None: self.z += value
 
-    # Equality check for comparing coordinates
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Coordinate): raise ValueError("Use a Coordinate instance!")
-        return (self.x == other.x and self.y == other.y and self.z == other.z)
-
-    # Hashing method for sets and dicts
-    def __hash__(self) -> int:
-        return hash((self.x, self.y, self.z))
+    def __eq__(self, other: object) -> bool: return (self.x == other.x and self.y == other.y and self.z == other.z) if isinstance(other, Coordinate) else False  # Equality check for comparing coordinates
+    def __hash__(self) -> int:               return self._hash                                                                                                   # Hashing method for sets and dicts

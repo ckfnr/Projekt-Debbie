@@ -34,7 +34,7 @@ def calc_circle_coordinates(step_width: float, angle: float, max_points: int, po
     
     :param centert_multiplier (float): The multiplier of how much the center of the circle will be moved down. (param 'a' in the maths-pdf)
     """
-    return [calc_coordinate(step_width=step_width, angle=angle, max_points=max_points, point=point, circle_multiplier=circle_multiplier) for point in range(max_points+1)]
+    return [_calc_coordinate(step_width=step_width, angle=angle, max_points=max_points, point=point, circle_multiplier=circle_multiplier) for point in range(max_points+1)]
 
 @cached
 def calc_servo_angles(coordinate: Coordinate) -> tuple[int, int, int]:
@@ -42,7 +42,7 @@ def calc_servo_angles(coordinate: Coordinate) -> tuple[int, int, int]:
     raise NotImplementedError("This function is not implemented yet!")
 
 @cached
-def calc_coordinate(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float) -> Coordinate:
+def _calc_coordinate(step_width: float, angle: float, max_points: int, point: int, circle_multiplier: float) -> Coordinate:
     """
     Calculates a 3D coordinate based on a step width, angle, and a given point index.
 
@@ -63,7 +63,7 @@ def calc_coordinate(step_width: float, angle: float, max_points: int, point: int
     :return: A `Coordinate` object containing the calculated (x, y, z) position.
     :rtype: Coordinate
     """
-    #! Has to be updated as soon as @Mr.Hühnchen is done
+    #ToDo: Has to be updated as soon as @Mr.Hühnchen is done
     c1: float = ( (step_width**2) / (4-4*circle_multiplier**2) )**0.5
     c2: float = abs(_asin(circle_multiplier))
     block: float = (180*point - c2*(2*point-max_points)) / (max_points)

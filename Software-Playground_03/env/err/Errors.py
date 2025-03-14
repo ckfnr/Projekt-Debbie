@@ -4,5 +4,8 @@ class ProgrammingError(Exception):
 class NoThreadError(Exception):
     pass
 
-class InvalidOS(Exception):
+class InvalidOSError(Exception):
+    pass
+
+class ThreadAlreadySetError(Exception):
     pass

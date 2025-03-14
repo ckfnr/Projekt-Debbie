@@ -25,13 +25,12 @@
 
 
 from re import compile, Pattern
-from typing import Literal
 
 class Config:
     def __init__(self) -> None:
         # Colors
-        self.color_reset: str = "\033[0m"
-        self.color_green: str = "\033[32m"
+        self.color_reset: str =  "\033[0m"
+        self.color_green: str =  "\033[32m"
         self.color_yellow: str = "\033[33m"
 
         # Database settings
