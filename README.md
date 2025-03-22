@@ -11,7 +11,6 @@ _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with si
 
 ## 📝 Incoming
 - Detailed documentation
-- Better leg control
 - Remote control
 
 ## ⚙️ Accessories
