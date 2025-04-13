@@ -81,35 +81,20 @@ class Config:
             b"\x09": "normal",          # Normal position
         }
 
-
-        # Leg configurations
-        # self.l1: float = 114.0
-        # self.l2: float = 100.0
-        # self.l3: float = 27.0
-        # self.l4: float = 97.0
-        # self.l5: float = 31.0
-        # self.l6: float = 46.0
-        # self.l7: float = 25.0
-        # self.l8: float = 38.0
-        # self.l9: float = 24.0
-        # self.ds: float = 20.0
-        # self.epsilon_alpha: float = 45.0
-        # self.epsilon_beta: float = 0.0
-
-        self.z_def : float = -160
-        self.d_s   : float = 20
-        self.l_1   : float = 114
-        self.l_2   : float = 100
-        self.l_3   : float = 27
-        self.l_4   : float = 97
-        self.l_5   : float = 31
-        self.l_6   : float = 46
-        self.l_7   : float = 25
-        self.l_8   : float = 38
-        self.l_9   : float = 24
+        self.z_def : float = -170
+        self.d_s   : float =   20
+        self.l_1   : float =  114
+        self.l_2   : float =  100
+        self.l_3   : float =   27
+        self.l_4   : float =   97
+        self.l_5   : float =   31
+        self.l_6   : float =   46
+        self.l_7   : float =   25
+        self.l_8   : float =   38
+        self.l_9   : float =   24
 
         self.coord_deviation: tuple[float, float, float] = (0.0, 0.0, 0.0)  # xyz in mm3
-        self.height_multiplier: float = 9.0
+        self.height_multiplier: float = 6.0
         # All values have to be integer!!!
         self.leg_configuration_rf: dict[str, dict[str, int]] = {
             "channels": {

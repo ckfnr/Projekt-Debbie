@@ -122,9 +122,13 @@ class SServo:
                     self.servo_wrapper.angle = adjusted_target
                     return
 
-                for _ in range(steps):
+                start_time = time.time()
+                for step in range(steps):
                     # Break out of the loop if the stop event has been set
                     if self._stop_event.is_set(): return
+
+                    # Calculate the exact time this step *should* occur
+                    target_time = start_time + (step + 1) * (duration / steps)
 
                     # Get new angle and validate it
                     next_angle = max(self.min_angle, min(self.max_angle, add_until_limit(start=current_angle, increment=step_difference, limit=adjusted_target)))
@@ -135,7 +139,9 @@ class SServo:
                     # Set servo to new angle and wait
                     current_angle = next_angle
                     self.servo_wrapper.angle = round(current_angle)
-                    time.sleep(duration / steps)
+
+                    # Wait until the exact time for the next step
+                    time.sleep(max(0, target_time - time.time()))
 
                 # Final adjustment if the servo movement hasn't been interrupted to ensure we reach the exact target
                 self.servo_wrapper.angle = adjusted_target

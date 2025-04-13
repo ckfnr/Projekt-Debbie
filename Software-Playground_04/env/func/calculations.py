@@ -1,6 +1,6 @@
 from numpy import sin, cos, tan, arcsin, arccos, arctan, radians, degrees
 from typing import Literal
-from decimal import Decimal, getcontext
+from decimal import getcontext
 
 # Set high precision for Decimal calculations
 getcontext().prec = 28  

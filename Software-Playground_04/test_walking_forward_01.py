@@ -1,6 +1,5 @@
 from env.classes.movement import Movement
 from env.classes.Classes import Coordinate
-from env.func.calculations import calc_circle_coordinates
 
 m = Movement()
 
@@ -22,7 +21,7 @@ while True:
     m.leg_right_back.start_circle()
     m.leg_left_front.join_circle()
     m.leg_right_back.join_circle()
-    
+
     m.leg_right_front.join()
     m.leg_left_back.join()
 

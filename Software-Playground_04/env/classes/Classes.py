@@ -1,4 +1,4 @@
-from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
+from adafruit_servokit import Servo  # type:ignore[import-untyped]
 
 # Decorators
 from env.decr.decorators import validate_types
