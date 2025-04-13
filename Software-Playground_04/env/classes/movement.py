@@ -57,6 +57,11 @@ class Movement:
 
         dprint(f"{config.color_yellow}[ NOTE ] All functions of the movement class will be created as soon as the coordinate systems can be used.{config.color_reset}")
 
+    @validate_types
+    def set_all_legs(self, coordinate: Coordinate, duration: float) -> None:
+        for leg in self.all_legs:
+            leg.set_to_coordinate(coordinate=coordinate, duration_s=duration)
+
     def start_all_legs(self) -> None:
         """Starts all leg movements."""
         for leg in self.all_legs: leg.start()
@@ -144,7 +149,8 @@ class Movement:
         raise NotImplementedError("This function is not implemented yet!")
 
     @validate_types
-    def adjust_height_body(self, *, distance_cm: float, duration_s: float) -> None:
+    def adjust_height_body(self, *, distance_mm: float, duration_s: float) -> None:
         for leg in self.all_legs:
             current_coordinate: Coordinate = leg.get_current_position()
-            leg.set_to_coordinate(coordinate=current_coordinate.adjust_z(value=distance_cm), duration_s=duration_s)
+            current_coordinate.add_z(value=distance_mm)
+            leg.set_to_coordinate(coordinate=current_coordinate, duration_s=duration_s)

@@ -1,4 +1,5 @@
-from typing import Any, Literal
+import threading
+from typing import Any, Literal, Optional
 
 # Classes
 from env.classes.Classes import Coordinate
@@ -11,6 +12,9 @@ from env.decr.decorators import cached, validate_types
 # Func
 from env.func.calculations import calc_servo_angles, calc_circle_coordinates
 from env.func.DEBUG import dprint
+
+# Errors
+from env.err.Errors import NoThreadError
 
 # Config
 from env.config import config
@@ -70,6 +74,7 @@ class Leg:
         )
         self.current_position: Coordinate = Coordinate(0.0, 0.0, 0.0)  # Initialize current position to (0, 0, 0) --> Default position
         self.all_servos: tuple[SServo, SServo, SServo] = (self.thigh, self.lower_leg, self.side_axis)
+        self.circle_thread: Optional[threading.Thread] = None
 
     @cached
     def get_servos(self) -> tuple[SServo, SServo, SServo]:
@@ -85,9 +90,7 @@ class Leg:
 
         :return (None): This function does not return a value.
         """
-        self.thigh.set_to_normal(duration_s)
-        self.lower_leg.set_to_normal(duration_s)
-        self.side_axis.set_to_normal(duration_s)
+        self.set_to_coordinate(coordinate=Coordinate(x=0.0, y=0.0, z=0.0), duration_s=duration_s)
 
     @validate_types
     def set_to_coordinate(self, coordinate: Coordinate, duration_s: float) -> None:
@@ -103,6 +106,27 @@ class Leg:
         self.thigh.set_angle(target_angle=angles["thigh"], duration=duration_s)
         self.lower_leg.set_angle(target_angle=angles["lower-leg"], duration=duration_s)
         self.side_axis.set_angle(target_angle=angles["side-axis"], duration=duration_s)
+
+    @validate_types
+    def set_circle(self, step_width: float, angle: int, max_points: int, duration: float) -> None:
+        coords: list[Coordinate] = calc_circle_coordinates(step_width=step_width, angle=angle, max_points=max_points)
+        motion_time: float = duration / max_points
+
+        def execute() -> None:
+            for coord in coords:
+                self.set_to_coordinate(coordinate=coord-Coordinate(x=coord.x/2, y=0.0, z=0.0), duration_s=motion_time)
+                self.start()
+                self.join()
+                
+        self.circle_thread = threading.Thread(target=execute)
+
+    def start_circle(self) -> None:
+        if self.circle_thread == None: raise NoThreadError("No circle thread set!")
+        self.circle_thread.start()
+
+    def join_circle(self) -> None:
+        if self.circle_thread == None: raise NoThreadError("No circle thread set!")
+        self.circle_thread.join()
 
     def start(self) -> None:
         for servo in self.all_servos:

@@ -80,6 +80,7 @@ class SServo:
         self.servo_thread: Optional[Thread] = None
         self.leg: str =                       leg
         self.servo_type: str =                servo_type
+        self.start_time: Optional[float] =    None
 
     @validate_types
     def set_angle(self, target_angle: int, duration: float, nm_action: bool = False) -> None:
@@ -97,10 +98,7 @@ class SServo:
         adjusted_target: int = adjust_angle(is_mirrored=self.mirrored, max_angle=self.max_angle, min_angle=self.min_angle, angle=target_angle, deviation=self.deviation)
 
         # Validate the adjusted target angle
-        if not self.min_angle <= adjusted_target <= self.max_angle: raise ValueError(f"Servo ({self.leg}:{self.servo_type}): Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
-
-        # Check if the the servo has already reached its target; If so, just wait
-        if self.servo_wrapper.angle == adjusted_target: time.sleep(duration)
+        if not (self.min_angle <= adjusted_target <= self.max_angle): raise ValueError(f"Servo ({self.leg}:{self.servo_type}): Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
 
         # Determine steps and step difference
         current_angle =   self.servo_wrapper.angle if self.servo_wrapper.angle is not None else self.adjusted_normal_position
@@ -112,17 +110,23 @@ class SServo:
 
         def move_to_target() -> None:
             nonlocal current_angle
+
+            # Check if the the servo has already reached its target; If so, just wait
+            if current_angle == adjusted_target:
+                time.sleep(duration)
+                return
+
             with self.lock:
-                # If duration == 0, just set_angle the servo angle to the adjusted angle
+                # If duration == 0, just set the servo angle to the adjusted angle
                 if duration == 0:
                     self.servo_wrapper.angle = adjusted_target
                     return
 
-                while abs(adjusted_target - current_angle) > config.servo_stopping_treshhold:
+                for _ in range(steps):
                     # Break out of the loop if the stop event has been set
                     if self._stop_event.is_set(): return
 
-        	        # Get new angle and validate it
+                    # Get new angle and validate it
                     next_angle = max(self.min_angle, min(self.max_angle, add_until_limit(start=current_angle, increment=step_difference, limit=adjusted_target)))
                     if not self.min_angle <= round(next_angle, 0) <= self.max_angle:
                         dprint(f"WARNING: Current servo angle at servo ({self.leg}:{self.servo_type}): {self.servo_wrapper.angle}; next angle {next_angle} out of range [{self.min_angle} - {self.max_angle}]")
@@ -141,6 +145,7 @@ class SServo:
         self._stop_event.reset()
 
         # Create the new movement thread
+        self.start_time = time.time()
         self.servo_thread = Thread(target=move_to_target, daemon=True)
         dprint(f"Created servo thread for leg {self.leg} and servo {self.servo_type}")
 
@@ -158,6 +163,10 @@ class SServo:
 
         self.servo_thread.join()  # Wait for servo to finish its movement
         self.servo_thread = None  # Clear servo thread
+
+        if not self.start_time: return  # No movement started
+        dprint(f"✅ Finished movement of servo ({self.leg}:{self.servo_type}) with servo channel '{self.servo_channel}' took {(time.time() - self.start_time):.2f} seconds")
+        self.start_time = None
 
     def clear_thread(self) -> None:
         """Clears the servo thread."""

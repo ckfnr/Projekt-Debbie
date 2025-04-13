@@ -21,7 +21,7 @@ def _sin(num: float) -> float:  return sin(_rad(num))
 def _cos(num: float) -> float:  return cos(_rad(num))
 # def _tan(num: float) -> float:  return tan(_rad(num))
 def _asin(num: float) -> float: return _deg(arcsin(num))
-def _acos(num: float) -> float: assert -1 <= num <= 1, f"Num {num} out of range in _acos!" ; return _deg(arccos(num))
+def _acos(num: float) -> float: return _deg(arccos(num))
 def _atan(num: float) -> float: return _deg(arctan(num))
 def _sqrt(num: float) -> float: return num ** 0.5
 
@@ -103,77 +103,29 @@ def _calc_circle_coordinate(step_width: float, angle: int, point: int, max_point
 
 @cached
 @validate_types
-def calc_epsilons(l_ds: float) -> dict[Literal["epsilon-alpha", "epsilon-beta"], float]:
-    theta_2e      : float = _acos((config.z_def**2 + config.l_2**2 - config.l_1**2) / (2 * abs(config.z_def) * config.l_2))
-    epsilon_alpha : float = 90 - theta_2e
-
-    theta_3e      : float = _acos((config.l_1**2 + config.l_2**2 - config.z_def**2) / (2 * config.l_1 * config.l_2))
-    theta_4e      : float = 180 - theta_3e
-
-    l_2l3e        : float = _sqrt(config.l_2**2 + config.l_3**2 - 2 * config.l_2 * config.l_3 * _cos(theta_4e))
-    theta_5e      : float = _acos((config.l_2**2 + l_2l3e**2 - config.l_3**2) / (2 * config.l_2 * l_2l3e))
-    theta_6e      : float = _acos((l_2l3e**2 + config.l_5**2 - config.l_4**2) / (2 * l_2l3e * config.l_5))
-    theta_7e      : float = theta_6e + theta_5e - epsilon_alpha
-
-    theta_8e      : float = _acos((config.l_5**2 + config.l_7**2 - config.l_6**2) / (2 * config.l_5 * config.l_7))
-    theta_9e      : float = 180 - theta_8e - theta_7e
-    theta_10e     : float = theta_9e + 45
-
-    l_8l9e        : float = _sqrt(config.l_7**2 + l_ds**2 - 2 * config.l_7 * l_ds * _cos(theta_10e))
-    theta_11e     : float = _acos((l_8l9e**2 + l_ds**2 - config.l_7**2) / (2 * l_8l9e * l_ds))
-    theta_12e     : float = _acos((l_8l9e**2 + config.l_9**2 - config.l_8**2) / (2 * l_8l9e * config.l_9))
-
-    epsilon_beta  : float = 135 - theta_12e - theta_11e
-
-    return {"epsilon-alpha": epsilon_alpha, "epsilon-beta": epsilon_beta}
-
-@cached
-@validate_types
 def calc_servo_angles(coordinate: Coordinate, height_multiplier: float = config.height_multiplier) -> dict[Literal["thigh", "lower-leg", "side-axis"], int]:
     """Calculates the lower_leg, thigh and side_axis servo angles."""
     coordinate.add_xyz_tuple(config.coord_deviation)
 
-    # Set up xyz
-    x_sa: float = coordinate.x
-    y_sa: float = coordinate.y
-    z_sa: float = coordinate.z * height_multiplier
-
-    # General calculations for servo angles
-    l_ds  : float = _sqrt(2) * config.d_s
-    z_sac : float = z_sa + config.z_def
-
-    # Epsilon calculations
-    epsilons: dict[str, float] = calc_epsilons(l_ds)
-    epsilon_alpha: float = epsilons["epsilon-alpha"]
-    epsilon_beta : float = epsilons["epsilon-beta"]
-
-    # Servo angle formulas
-    # <-- Start -->
-    z_sa2D   : float = _sqrt(y_sa**2 + z_sac**2)
-    l_1l2    : float = _sqrt(x_sa**2 + z_sa2D**2)
-    theta_1X : float = _atan(x_sa / z_sa2D)
-
-    theta_2  : float = _acos((l_1l2**2 + config.l_2**2 - config.l_1**2) / (2 * l_1l2 * config.l_2))
-    theta_3  : float = _acos((config.l_1**2 + config.l_2**2 - l_1l2**2) / (2 * config.l_1 * config.l_2))
-    theta_4  : float = 180 - theta_3
-
-    l_2l3    : float = _sqrt(config.l_2**2 + config.l_3**2 - 2 * config.l_2 * config.l_3 * _cos(theta_4))
-    theta_5  : float = _acos((config.l_2**2 + l_2l3**2 - config.l_3**2) / (2 * config.l_2 * l_2l3))
-    theta_6  : float = _acos((l_2l3**2 + config.l_5**2 - config.l_4**2) / (2 * l_2l3 * config.l_5))
-
-    alpha    : float = theta_2 - theta_1X + epsilon_alpha - 90
-    theta_7  : float = theta_6 + theta_5 + alpha - epsilon_alpha
-
-    theta_8  : float = _acos((config.l_5**2 + config.l_7**2 - config.l_6**2) / (2 * config.l_5 * config.l_7))
-    theta_9  : float = 180 - theta_8 - theta_7
-    theta_10 : float = theta_9 + 45
-
-    l_8l9    : float = _sqrt(config.l_7**2 + l_ds**2 - 2 * config.l_7 * l_ds * _cos(theta_10))
-    theta_11 : float = _acos((l_8l9**2 + l_ds**2 - config.l_7**2) / (2 * l_8l9 * l_ds))
-    theta_12 : float = _acos((l_8l9**2 + config.l_9**2 - config.l_8**2) / (2 * l_8l9 * config.l_9))
-
-    beta     : float = theta_12 + theta_11 + epsilon_beta - 135
-    gamma    : float = _atan(y_sa / z_sac)
-    # <-- End -->
+    z2D: float =        _sqrt(coordinate.y**2 + coordinate.z**2)
+    l12: float =        _sqrt(coordinate.x**2 + coordinate.z**2)
+    theta_1: float =    _atan((coordinate.x) / (z2D))
+    theta_2: float =    _acos((l12**2 + config.l2**2 - config.l1**2) / (2 * l12 * config.l2))
+    theta_3: float =    _acos((config.l1**2 + config.l2**2 - l12**2) / (2 * config.l1 * config.l2))
+    theta_4: float =    180 - theta_3
+    l23: float =        _sqrt(config.l2**2 + config.l3**2 - 2 * config.l2 * config.l3 * _cos(theta_4))
+    theta_5: float =    _acos((config.l2**2 + l23**2 - config.l3**2) / (2 * config.l2 * l23))
+    theta_6: float =    _acos((l23**2 + config.l5**2 - config.l4**2) / (2 * l23 * config.l5))
+    alpha: float =      theta_2 - theta_1 + config.epsilon_alpha - 90
+    theta_7: float =    theta_6 + theta_5 + alpha - config.epsilon_alpha
+    theta_8: float =    _acos((config.l5**2 + config.l7**2 - config.l6**2) / (2 * config.l5 * config.l7))
+    theta_9: float =    180 - theta_8 - theta_7
+    theta_10: float =   theta_9 + 45
+    lds: float =        _sqrt(2) * config.ds
+    l89: float =        _sqrt(config.l7**2 + lds**2 - 2 * config.l7 * lds * _cos(theta_10))
+    theta_11: float =   _acos((l89**2 + lds**2 - config.l7**2) / (2 * l89 * lds))
+    theta_12: float =   _acos((l89**2 + config.l9**2 - config.l8**2) / (2 * l89 * config.l9))
+    beta: float =       theta_12 + theta_11 + config.epsilon_beta - 135
+    gamma: float =      _atan(coordinate.y / coordinate.z)
 
     return {"thigh": int(round(alpha, 0)), "lower-leg": int(round(beta, 0)), "side-axis": int(round(gamma, 0))}

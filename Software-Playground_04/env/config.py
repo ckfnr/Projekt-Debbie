@@ -38,18 +38,18 @@ class Config:
         self.db_file: str = "movement.sqlite3"
 
         # Developer settings
-        self.debug: bool = True
+        self.debug: bool = False
 
         # Servo general (default)
         self.servo_channel_count: int = 16               # Channel amount of the servo controller
         self.servo_normal_position: int = 0              # Normal position of all servos
         self.servo_default_normalize_speed: float = 3.0  # How many seconds the servos should need to normalize their position
         self.servo_default_speed: float = 1.0            # Default speed of the servos
-        self.servo_stopping_treshhold: float = 0.5       # The threshold that determines when the servo movement should stop.  (The smaller the more accurate); Shouldn't be too small to ensure functionality!
+        # self.servo_stopping_treshhold: float = 5.0       # The threshold that determines when the servo movement should stop.  (The smaller the more accurate); Shouldn't be too small to ensure functionality!
         self.max_legs: int = 4                           # How many legs DEBBIE has
 
         # Coordinate calculation settings
-        self.number_a: float = -0.0                      # Multiplier for the radius of the circle movement
+        self.number_a: float = -0.5                      # Multiplier for the radius of the circle movement
 
         # Gyroscope general (default)
         self.deviation_x: float = -103.3
@@ -83,18 +83,33 @@ class Config:
 
 
         # Leg configurations
-        self.l1: float = 114
-        self.l2: float = 100
-        self.l3: float = 27
-        self.l4: float = 97
-        self.l5: float = 31
-        self.l6: float = 46
-        self.l7: float = 25
-        self.l8: float = 38
-        self.l9: float = 24
-        self.ds: float = 20
-        self.epsilon: float = 45
-        self.coord_deviation: tuple[float, float, float] = (-30.0, 0.0, -150.0)  # xyz in mm3
+        # self.l1: float = 114.0
+        # self.l2: float = 100.0
+        # self.l3: float = 27.0
+        # self.l4: float = 97.0
+        # self.l5: float = 31.0
+        # self.l6: float = 46.0
+        # self.l7: float = 25.0
+        # self.l8: float = 38.0
+        # self.l9: float = 24.0
+        # self.ds: float = 20.0
+        # self.epsilon_alpha: float = 45.0
+        # self.epsilon_beta: float = 0.0
+
+        self.z_def : float = -160
+        self.d_s   : float = 20
+        self.l_1   : float = 114
+        self.l_2   : float = 100
+        self.l_3   : float = 27
+        self.l_4   : float = 97
+        self.l_5   : float = 31
+        self.l_6   : float = 46
+        self.l_7   : float = 25
+        self.l_8   : float = 38
+        self.l_9   : float = 24
+
+        self.coord_deviation: tuple[float, float, float] = (0.0, 0.0, 0.0)  # xyz in mm3
+        self.height_multiplier: float = 9.0
         # All values have to be integer!!!
         self.leg_configuration_rf: dict[str, dict[str, int]] = {
             "channels": {
@@ -104,16 +119,16 @@ class Config:
             },
             "angles": {
                 "min_thigh": 60,
-                "max_thigh": 130,
-                "min_lower_leg": 70,
-                "max_lower_leg": 105,
+                "max_thigh": 125,
+                "min_lower_leg": 55,
+                "max_lower_leg": 130,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,
+                "thigh": -12,
                 "lower_leg": 0,
-                "side_axis": 0,
+                "side_axis": 2,
             },
             "mirrored":{
                 "thigh": False,
@@ -129,15 +144,15 @@ class Config:
             },
             "angles": {
                 "min_thigh": 60,
-                "max_thigh": 130,
-                "min_lower_leg": 70,
-                "max_lower_leg": 105,
+                "max_thigh": 125,
+                "min_lower_leg": 55,
+                "max_lower_leg": 130,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
                 "thigh": 0,
-                "lower_leg": 0,
+                "lower_leg": -3,
                 "side_axis": -20,
             },
             "mirrored":{
@@ -154,9 +169,9 @@ class Config:
             },
             "angles": {
                 "min_thigh": 60,
-                "max_thigh": 130,
-                "min_lower_leg": 70,
-                "max_lower_leg": 105,
+                "max_thigh": 125,
+                "min_lower_leg": 55,
+                "max_lower_leg": 130,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
@@ -179,15 +194,15 @@ class Config:
             },
             "angles": {
                 "min_thigh": 60,
-                "max_thigh": 130,
-                "min_lower_leg": 70,
-                "max_lower_leg": 105,
+                "max_thigh": 125,
+                "min_lower_leg": 55,
+                "max_lower_leg": 130,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,
-                "lower_leg": 0,
+                "thigh": -3,
+                "lower_leg": -15,
                 "side_axis": 10,
             },
             "mirrored":{
