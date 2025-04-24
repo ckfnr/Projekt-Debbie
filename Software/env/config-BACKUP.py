@@ -33,7 +33,6 @@ class Config:
         self.color_reset: str =  "\033[0m"
         self.color_green: str =  "\033[32m"
         self.color_yellow: str = "\033[33m"
-        self.color_red: str =    "\033[31m"
 
         # Database settings
         self.db_file: str = "movement.sqlite3"
@@ -46,12 +45,11 @@ class Config:
         self.servo_normal_position: int = 0              # Normal position of all servos
         self.servo_default_normalize_speed: float = 3.0  # How many seconds the servos should need to normalize their position
         self.servo_default_speed: float = 1.0            # Default speed of the servos
-        # self.servo_stopping_treshhold: float = 5.0     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate); Shouldn't be too small to ensure functionality!
+        self.servo_stopping_treshhold: float = 0.5       # The threshold that determines when the servo movement should stop.  (The smaller the more accurate)
         self.max_legs: int = 4                           # How many legs DEBBIE has
 
         # Coordinate calculation settings
         self.number_a: float = -0.5                      # Multiplier for the radius of the circle movement
-        self.coord_multiplier: float = 4/3               # Multiplier for the coordinate system of the servos
 
         # Gyroscope general (default)
         self.deviation_x: float = -103.3
@@ -59,7 +57,7 @@ class Config:
         self.deviation_z: float = -2.1
 
         # Decorator config
-        self.max_lru_cache: int = 100                     # The maximum amount of cache entries for the lru decorator
+        self.max_lru_cache: int = 50                     # The maximum amount of cache entries for the lru decorator
 
         # MMT-File settings
         self.duration_pattern: Pattern = compile(r"seconds=(\d+(\.\d+)?)")
@@ -69,12 +67,9 @@ class Config:
         self.auto_parse_startup: bool = True
 
         # Controller settings
-        self.bufsize: int = 1024                  # Buffer size for the controller
-        self.port   : int = 58_000                # Port for the controller
-        self.ip     : str = "0.0.0.0"             # IP for the controller
-        self.max_heartbeat_interval: float = 2.0  # The maximum time in seconds between two heartbeats
-        self.controller_map: dict[bytes, Literal["step-backwards", "step-forwards", "turn-left", "turn-right", "sidestep-left", "sidestep-right", "lower", "lift", "normal", "RESET", "HEARTBEAT"]] = {
-            b"\x00": "HEARTBEAT",       # Heartbeat
+        self.bufsize: int = 1024
+        self.port: int = 58_000
+        self.controller_map: dict[bytes, Literal["step-backwards", "step-forwards", "turn-left", "turn-right", "sidestep-left", "sidestep-right", "lower", "lift","normal"]] = {
             b"\x01": "step-forwards",   # Walk forwards
             b"\x02": "step-backwards",  # Walk backwards
             b"\x03": "turn-left",       # Turn left
@@ -84,48 +79,23 @@ class Config:
             b"\x07": "lower",           # Lower the legs
             b"\x08": "lift",            # Lift the legs
             b"\x09": "normal",          # Normal position
-            b"\xff": "RESET",           # Stop all movements
         }
 
-        # Leg length settings
-        self.z_def : float = -170  # The default z position of the leg in mm
-        self.d_s   : float =   20
-        self.d_ys  : float =   25
-        self.d_cpm : float =   13
-        self.f_w   : float =   16
-        self.l_1   : float =  114
-        self.l_2   : float =  100
-        self.l_3   : float =   27
-        self.l_4   : float =   97
-        self.l_5   : float =   31
-        self.l_6   : float =   46
-        self.l_7   : float =   25
-        self.l_8   : float =   38
-        self.l_9   : float =   24
 
-        # Step settings
-        self.max_points : int   =   10  # The maximum amount of points for the circle movement
-        self.step_width : float = 50.0  # The width of the step in mm
-        self.step_height: float = 40.0  # The height of the step in mm
-        self.smoothness : float = -0.5  # The smoothness of the circle movement
-        self.duration   : float =  0.1  # The duration of the movement in seconds
-        self.coord_deviation: tuple[float, float, float] = (0.0, 0.0, 0.0)  # xyz in mm
+        # Leg configurations
+        self.l1: float = 114
+        self.l2: float = 100
+        self.l3: float = 27
+        self.l4: float = 107
+        self.l5: float = 27
+        self.l6: float = 36
+        self.l7: float = 24
+        self.l8: float = 38
+        self.l9: float = 24
+        self.ds: float = 20
+        self.epsilon: float = 45
+        self.coord_deviation: tuple[float, float, float] = (-20.0, 0.0, -180.0)  # xyz in mm
 
-        # Step map settings
-        # (left_front, left_back, right_front, right_back)
-        self.step_map_angles: dict[Literal["step-forward", "step-backward", "sidestep-left", "sidestep-right", "turn-left", "turn-right"], dict[Literal["left-front", "left-back", "right-front", "right-back"], int]] = {
-            # Steps
-            "step-forward" : {"left-front": 0  , "left-back": 0   , "right-front": 0  , "right-back": 0  },
-            "sidestep-right"   : {"left-front": 90 , "left-back": 90  , "right-front": 270, "right-back": 270},
-            "step-backward": {"left-front": 180, "left-back": 180 , "right-front": 0  , "right-back": 0  },
-            "sidestep-left"    : {"left-front": 270, "left-back": 270 , "right-front": 90 , "right-back": 90 },
-
-            # Turn left/right
-            "turn-left"    : {"left-front": 270, "left-back": 90  , "right-front": 270, "right-back": 90 },
-            "turn-right"   : {"left-front": 90 , "left-back": 270 , "right-front": 90 , "right-back": 270},
-        }
-
-        # Leg settings
         # All values have to be integer!!!
         self.leg_configuration_rf: dict[str, dict[str, int]] = {
             "channels": {
@@ -134,17 +104,17 @@ class Config:
                 "side_axis": 2,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
-                "max_lower_leg": 130,
+                "min_thigh": 50,
+                "max_thigh": 110,
+                "min_lower_leg": 90,
+                "max_lower_leg": 145,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": -12,
-                "lower_leg": 0,
-                "side_axis": 2,
+                "thigh": 17,
+                "lower_leg": 15,
+                "side_axis": 0,
             },
             "mirrored":{
                 "thigh": False,
@@ -159,16 +129,16 @@ class Config:
                 "side_axis": 10,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
-                "max_lower_leg": 130,
+                "min_thigh": 50,
+                "max_thigh": 120,
+                "min_lower_leg": 70,
+                "max_lower_leg": 100,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,
-                "lower_leg": -3,
+                "thigh": 12,
+                "lower_leg": 30,
                 "side_axis": -20,
             },
             "mirrored":{
@@ -184,16 +154,16 @@ class Config:
                 "side_axis": 6,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
-                "max_lower_leg": 130,
+                "min_thigh": 50,
+                "max_thigh": 120,
+                "min_lower_leg": 70,
+                "max_lower_leg": 100,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,        # 12
-                "lower_leg": 0,    # 59  #? Was this negative?
+                "thigh": 12,       # 12
+                "lower_leg": -59,  # 59  #? Was this negative?
                 "side_axis": -22,  # -22
             },
             "mirrored":{
@@ -209,16 +179,16 @@ class Config:
                 "side_axis": 14,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
-                "max_lower_leg": 130,
+                "min_thigh": 50,
+                "max_thigh": 120,
+                "min_lower_leg": 70,
+                "max_lower_leg": 100,
                 "min_side_axis": 70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": -3,
-                "lower_leg": -15,
+                "thigh": 15,
+                "lower_leg": -45,
                 "side_axis": 10,
             },
             "mirrored":{

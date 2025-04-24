@@ -1,42 +1,24 @@
-import json
-from sqlite3 import Connection, Cursor
+import numpy
 
 # Classes
-from env.func.Classes import Coordinate
-
-def store_coordinates(target_coord: Coordinate, coords: list[Coordinate], cur: Cursor) -> None:
-    """Store a list of coordinate tuples into the database."""
-    # Serialize the list of coordinates to a JSON string
-    coords_json = json.dumps([i.get_xyz() for i in coords])
-
-    # Create a new table if it doesn't exist
-    cur.execute('''CREATE TABLE IF NOT EXISTS coordinates
-                (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                target_coord TEXT,
-                coords TEXT
-                )
-                ''')
-
-    # Insert the list of coordinates into the table
-    cur.execute('''INSERT INTO coordinates (target_coord, coords) VALUES (?, ?)''', (str(target_coord.get_xyz()), coords_json))
+from env.classes.db import DB
+from env.classes.calculator import Calculator
+from env.classes.Classes import Coordinate
 
 def main() -> None:
-    conn = Connection("movement.sqlite3")
-    cur = conn.cursor()
+    db = DB()
+    clctr = Calculator()
 
-    target_coord: Coordinate = Coordinate(10, 0, 0)
-    # Test movement
-    coords: list[Coordinate] = [
-        Coordinate(1.0, 2.0, 3.0),
-        Coordinate(4.0, 5.0, 6.0),
-        Coordinate(7.0, 8.0, 9.0),
-        Coordinate(10.0, 11.0, 12.0),
-    ]
+    clctr.pregenerate_coordinates(frm = 1.0, to=20.0, step=0.1)
 
-    store_coordinates(target_coord=target_coord, coords=coords, cur=cur)
+    for step_width in numpy.arange(1.0, 20.1, 0.1):
+        print(f"Saving coordinates for step width {step_width:.1f}...")
+        for angle in range(360):
+            coords: list[Coordinate] = clctr.get_coordinates(step_width=round(step_width, 1), angle=angle)
+            for coord in coords:
+                db.store_coordinates(step_width=round(step_width, 1), angle=angle, coord=coord)
+    db.save()
 
-    conn.commit()
-    conn.close()
+    print("Done!")
 
 if __name__ == "__main__": main()

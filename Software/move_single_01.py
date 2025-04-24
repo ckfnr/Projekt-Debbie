@@ -1,9 +1,9 @@
 # Func
-from env.func.movement import Movement
+from env.classes.movement import Movement
 from env.func.DEBUG import dprint
 
 m = Movement()
-d: int = 2
+d: float = 1.0
 
 def _get_value(input_string: str) -> int:
     """Extract the value from the input string."""
@@ -36,8 +36,8 @@ while True:
     else:
         prefix = servo_input.split("=")[0].strip()  # Extract the prefix
         if prefix in servo_map:
-            servo_map[prefix].set(target_angle=_get_value(servo_input), duration=d)
+            servo_map[prefix].set_angle(target_angle=_get_value(servo_input), duration=d)
             servo_map[prefix].start()
             servo_map[prefix].join()
         else:
-            dprint("Invalid input. Please enter a valid servo input (e.g. 'rf_s = 6')!")
+            dprint("Invalid input. Please enter a valid servo input (e.g. 'rf_s = 90')!")

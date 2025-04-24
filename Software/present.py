@@ -1,4 +1,4 @@
-from env.func.movement import Movement
+from env.classes.movement import Movement
 
 m = Movement()
 d: int = 1

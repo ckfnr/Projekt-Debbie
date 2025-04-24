@@ -1,7 +1,7 @@
 
 # Func
-from env.func.servos import Leg
-from env.func.movement import Movement
+from env.classes.leg import Leg
+from env.classes.movement import Movement
 from env.func.DEBUG import dprint
 
 m = Movement()
