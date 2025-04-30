@@ -26,6 +26,7 @@
 
 from re import compile, Pattern
 from typing import Literal
+from env.types.typing import LegConfigDict
 
 class Config:
     def __init__(self) -> None:
@@ -46,7 +47,7 @@ class Config:
         self.servo_normal_position: int = 0              # Normal position of all servos
         self.servo_default_normalize_speed: float = 3.0  # How many seconds the servos should need to normalize their position
         self.servo_default_speed: float = 1.0            # Default speed of the servos
-        # self.servo_stopping_treshhold: float = 5.0     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate); Shouldn't be too small to ensure functionality!
+        # self.servo_stopping_threshold: float = 5.0     # The threshold that determines when the servo movement should stop.  (The smaller the more accurate); Shouldn't be too small to ensure functionality!
         self.max_legs: int = 4                           # How many legs DEBBIE has
 
         # Coordinate calculation settings
@@ -115,19 +116,19 @@ class Config:
         # (left_front, left_back, right_front, right_back)
         self.step_map_angles: dict[Literal["step-forward", "step-backward", "sidestep-left", "sidestep-right", "turn-left", "turn-right"], dict[Literal["left-front", "left-back", "right-front", "right-back"], int]] = {
             # Steps
-            "step-forward" : {"left-front": 0  , "left-back": 0   , "right-front": 0  , "right-back": 0  },
-            "sidestep-right"   : {"left-front": 90 , "left-back": 90  , "right-front": 270, "right-back": 270},
-            "step-backward": {"left-front": 180, "left-back": 180 , "right-front": 0  , "right-back": 0  },
-            "sidestep-left"    : {"left-front": 270, "left-back": 270 , "right-front": 90 , "right-back": 90 },
+            "step-forward"  : {"left-front": 0  , "left-back": 0   , "right-front": 0  , "right-back": 0  },
+            "sidestep-right": {"left-front": 90 , "left-back": 90  , "right-front": 270, "right-back": 270},
+            "step-backward" : {"left-front": 180, "left-back": 180 , "right-front": 0  , "right-back": 0  },
+            "sidestep-left" : {"left-front": 270, "left-back": 270 , "right-front": 90 , "right-back": 90 },
 
             # Turn left/right
-            "turn-left"    : {"left-front": 270, "left-back": 90  , "right-front": 270, "right-back": 90 },
-            "turn-right"   : {"left-front": 90 , "left-back": 270 , "right-front": 90 , "right-back": 270},
+            "turn-left"     : {"left-front": 270, "left-back": 90  , "right-front": 270, "right-back": 90 },
+            "turn-right"    : {"left-front": 90 , "left-back": 270 , "right-front": 90 , "right-back": 270},
         }
 
         # Leg settings
         # All values have to be integer!!!
-        self.leg_configuration_rf: dict[str, dict[str, int]] = {
+        self.leg_configuration_rf: LegConfigDict = {
             "channels": {
                 "thigh": 0,
                 "lower_leg": 1,
@@ -152,7 +153,7 @@ class Config:
                 "side_axis": False,
             }
         }
-        self.leg_configuration_rb: dict[str, dict[str, int]] = {
+        self.leg_configuration_rb: LegConfigDict = {
             "channels": {
                 "thigh": 8,
                 "lower_leg": 9,
@@ -177,7 +178,7 @@ class Config:
                 "side_axis": True,
             }
         }
-        self.leg_configuration_lf: dict[str, dict[str, int]] = {
+        self.leg_configuration_lf: LegConfigDict = {
             "channels": {
                 "thigh": 4,
                 "lower_leg": 5,
@@ -202,7 +203,7 @@ class Config:
                 "side_axis": True,
             }
         }
-        self.leg_configuration_lb: dict[str, dict[str, int]] = {
+        self.leg_configuration_lb: LegConfigDict = {
             "channels": {
                 "thigh": 12,
                 "lower_leg": 13,

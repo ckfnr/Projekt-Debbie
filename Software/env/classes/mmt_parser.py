@@ -18,7 +18,8 @@ class Parser:
     def parse_file(self, file_path: str) -> None:
         """Parses the MMT-File."""
         # Skip if file_path is already parsed
-        if self.instructions.get(file_path, None): return
+        if self.instructions.get(file_path, None):
+            return
 
         # Reset instructions
         self.instructions[file_path] = []
@@ -30,7 +31,8 @@ class Parser:
                 adjusted_line: str = line.strip()
 
                 # Skip empty lines and comments
-                if not adjusted_line or adjusted_line.startswith("//"): continue
+                if not adjusted_line or adjusted_line.startswith("//"):
+                    continue
 
                 if adjusted_line == "MOVEMENT-START":  # Start of a new movement
                     current_block = {
@@ -96,4 +98,5 @@ class Parser:
             self.parse_file(file_path)
 
     @cached
-    def get_instructions(self, file_path: str) -> Optional[list[dict[str, float|Optional[Coordinate]]]]: return self.instructions.get(file_path, [])
+    def get_instructions(self, file_path: str) -> Optional[list[dict[str, float|Optional[Coordinate]]]]:
+        return self.instructions.get(file_path, [])

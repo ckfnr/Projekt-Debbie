@@ -1,5 +1,5 @@
 import time
-from adafruit_servokit import ServoKit  # type:ignore[import-untyped]
+from adafruit_servokit import ServoKit  # type:ignore[import-untyped, import-not-found]
 
 # Decorators
 from env.decr.decorators import validate_types, cached
@@ -27,3 +27,20 @@ def adjust_angle(is_mirrored: bool, max_angle: int, angle: int, deviation: int, 
     90° will be added --> (normal position = 0°).
     """
     return max_angle - ((angle+90 + deviation) - min_angle) if is_mirrored else angle+90 + deviation  #? Maybe remove the part to add 90° to the angle?
+
+@cached
+@validate_types
+def adjust_min_max_angles(is_mirrored: bool, min_angle: int, max_angle: int, deviation: int) -> tuple[int, int]:
+    """
+    Adjusts the min and max angles based on the mirror setting and deviation.
+    If mirrored, swaps the distances of min and max from the normal position,
+    then applies the deviation.
+    """
+    normal = config.servo_normal_position
+
+    if is_mirrored:
+        adjusted_min = 2 * normal - max_angle + deviation  # Calc new min angle
+        adjusted_max = 2 * normal - min_angle + deviation  # Calc new max angle
+        return (adjusted_min, adjusted_max)
+    else:
+        return (min_angle + deviation, max_angle + deviation)

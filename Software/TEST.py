@@ -166,7 +166,6 @@ class Movement:
         """Make a step in the given direction."""
         assert direction in ["step-forward", "step-backward", "sidestep-right", "sidestep-left"], \
             f"Direction {direction} is not valid. Use 'step-forward', 'step-backward', 'sidestep-right' or 'sidestep-left'."
-
         angles: dict[Literal["left-front", "left-back", "right-front", "right-back"], int] = config.step_map_angles[direction]
         self._step(step_width=step_width, angles=angles, duration=duration)
 

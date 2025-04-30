@@ -32,7 +32,7 @@ class Calculator:
     def pregenerate_coordinates(self, frm: float, to: float, step: float) -> None:
         # Generate circle coordinates for each step width
         for width in arange(frm, to+step, step):
-            dprint(f"Pregenerating coordinates for step_width={width:.1f}...")
+            dprint(f"Pregenerate coordinates for step_width={width:.1f}...")
             self._pregenerate_coordinates_by_step_width(round(width, 1))
 
         dprint(f"Done! Pregenerated coords from {frm} to {to}.")

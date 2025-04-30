@@ -19,6 +19,9 @@ from env.err.Errors import NoThreadError
 # Config
 from env.config import config
 
+# Typing
+from env.types.typing import LegConfigDict
+
 class Leg:
     """
     Manages a robotic leg composed of three servos: thigh, lower leg, and side axis.
@@ -26,7 +29,7 @@ class Leg:
     :param leg_configurations (dict[str, dict[str, Any]]): Configuration for the leg's channels, angle variations, and deviations.
     """
     # @validate_types
-    def __init__(self, *, leg_configurations: dict[str, dict[str, Any]], leg: str, stop_event: StopEvent) -> None:
+    def __init__(self, *, leg_configurations: LegConfigDict, leg: str, stop_event: StopEvent) -> None:
         self.required_keys: dict[str, set[str]] = {
             "channels":   {"thigh", "lower_leg", "side_axis"},
             "deviations": {"thigh", "lower_leg", "side_axis"},
