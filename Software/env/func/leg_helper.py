@@ -26,7 +26,12 @@ def adjust_angle(is_mirrored: bool, max_angle: int, angle: int, deviation: int, 
     Adjusts the angle based on the mirror setting and deviation.<br>
     90° will be added --> (normal position = 0°).
     """
-    return max_angle - ((angle+90 + deviation) - min_angle) if is_mirrored else angle+90 + deviation  #? Maybe remove the part to add 90° to the angle?
+    # return max_angle - ((angle+90 + deviation) - min_angle) if is_mirrored else angle+90 + deviation  #? Maybe remove the part to add 90° to the angle?
+
+    if is_mirrored:
+        return max_angle - ((angle + 90 + deviation) - min_angle)
+    else:
+        return angle + 90 + deviation
 
 @cached
 @validate_types
@@ -39,8 +44,7 @@ def adjust_min_max_angles(is_mirrored: bool, min_angle: int, max_angle: int, dev
     normal = config.servo_normal_position
 
     if is_mirrored:
-        adjusted_min = 2 * normal - max_angle + deviation  # Calc new min angle
-        adjusted_max = 2 * normal - min_angle + deviation  # Calc new max angle
-        return (adjusted_min, adjusted_max)
+        # return (180 - max_angle + deviation, 180 - min_angle + deviation)
+        return (180 - max_angle - deviation, 180 - min_angle - deviation)
     else:
         return (min_angle + deviation, max_angle + deviation)

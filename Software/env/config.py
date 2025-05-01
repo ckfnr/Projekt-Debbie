@@ -170,7 +170,7 @@ class Config:
             "deviations": {
                 "thigh": 0,
                 "lower_leg": -3,
-                "side_axis": -20,
+                "side_axis": -20,  # -20
             },
             "mirrored":{
                 "thigh": False,

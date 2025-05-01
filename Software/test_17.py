@@ -1,11 +1,3 @@
-from env.classes.movement import Movement
-from env.classes.Classes import Coordinate
-from env.func.calculations import calc_circle_coordinates, _calc_circle_coordinate
+from env.func.leg_helper import adjust_min_max_angles
 
-m = Movement()
-
-# coords: list[Coordinate] = calc_circle_coordinates(step_width=80.0, angle=0, max_points=20)
-
-coord: Coordinate = _calc_circle_coordinate(step_width=80.0, angle=0, point=10, max_points=10, smoothness=-0.5)
-
-print(coord)
+print(adjust_min_max_angles(is_mirrored=True, min_angle=60, max_angle=125, deviation=0))

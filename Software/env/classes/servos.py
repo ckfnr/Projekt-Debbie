@@ -1,16 +1,16 @@
 import time
 from threading import Thread, Lock
-from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped, import-not-found]
+from adafruit_servokit import ServoKit, Servo  # type:ignore[import-untyped]
 from typing import Optional
-import board  # type:ignore[import-untyped, import-not-found]
-import busio  # type:ignore[import-untyped, import-not-found]
+import board  # type:ignore[import-untyped]
+import busio  # type:ignore[import-untyped]
 
 # Decorators
 from env.decr.decorators import validate_types
 
 # Func
 from env.func.DEBUG import dprint
-from env.func.leg_helper import initialize_servos, adjust_angle, adjust_min_max_angles
+from env.func.leg_helper import initialize_servos, adjust_angle
 
 # Classes
 from env.classes.events import StopEvent
@@ -27,10 +27,13 @@ try:
     # Create an I2C instance
     i2c = busio.I2C(board.SCL, board.SDA)
     servo_kit: ServoKit = ServoKit(channels=config.servo_channel_count)
+
+    # Initialize the ServoKit with the I2C bus
+    kit = ServoKit(channels=16, i2c=i2c)
     
     initialize_servos(servo_kit=servo_kit)  # Safe initialization of servos
 except Exception as e:
-    dprint(f"Failed to initialize ServoKit. Returning to default position. Error: {e}")
+    dprint(f"Failed to initialize ServoKit. Returing to default position. Error: {e}")
 
 class SServo:
     """
@@ -53,11 +56,11 @@ class SServo:
                  servo_type: str,
                  stop_event: StopEvent
         ) -> None:
+        # raise ProgrammingError("There is still an issue in this code! Disabled functionality for safety!")
+
         # Check if all values are valid
-        if not 0 <= servo_channel <= config.servo_channel_count - 1:
-            raise ValueError(f"Servo channel must be between or equal to 0 and {config.servo_channel_count - 1}!")
-        if not servo_type in ["thigh", "lower_leg", "side_axis"]:
-            raise ValueError(f"Servo type must be one of the following: 'thigh', 'lower_leg', 'side_axis'!")
+        if not 0 <= servo_channel <= config.servo_channel_count - 1: raise ValueError(f"Servo channel must be between or equal to 0 and {config.servo_channel_count - 1}!")
+        elif not servo_type in ["thigh", "lower_leg", "side_axis"]:  raise ValueError(f"Servo type must be one of the following: 'thigh', 'lower_leg', 'side_axis'!")
 
         # Initialize threading
         self.lock: Lock = Lock()
@@ -69,7 +72,8 @@ class SServo:
         self.servo_wrapper: ServoWrapper =    ServoWrapper(servo=self.servo)  # Create a ServoWrapper instance to fix the bug that servo.angle is None sometimes (hardware issue); We call it "Pfusch"
         self.servo_channel: int =             servo_channel
         self.deviation: int =                 deviation
-        self.min_angle, self.max_angle =      adjust_min_max_angles(is_mirrored=mirrored, min_angle=min_angle, max_angle=max_angle, deviation=self.deviation)
+        self.min_angle: int =                 min_angle + deviation
+        self.max_angle: int =                 max_angle + deviation
         self.adjusted_normal_position: int =  config.servo_normal_position + deviation
         self.calculation_angle: float =       self.adjusted_normal_position
         self.mirrored: bool =                 mirrored
@@ -88,6 +92,8 @@ class SServo:
         :param nm_action (bool): Flag indicating if this is a 'start to normal' action with fixed steps.
         :raises ValueError: If the target angle is outside the valid range.
         """
+        #ToDo: Change this function as soon as the controller is being used
+
         # Interrupt running threads
         self.interrupt()
 
@@ -95,8 +101,7 @@ class SServo:
         adjusted_target: int = adjust_angle(is_mirrored=self.mirrored, max_angle=self.max_angle, min_angle=self.min_angle, angle=target_angle, deviation=self.deviation)
 
         # Validate the adjusted target angle
-        if not (self.min_angle <= adjusted_target <= self.max_angle):
-            raise ValueError(f"Servo ({self.leg}:{self.servo_type}): Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
+        if not (self.min_angle <= adjusted_target <= self.max_angle): raise ValueError(f"Servo ({self.leg}:{self.servo_type}): Adjusted target angle {adjusted_target} is out of range [{self.min_angle} - {self.max_angle}]")
 
         # Determine current angle
         current_angle = self.servo_wrapper.angle if self.servo_wrapper.angle is not None else self.adjusted_normal_position
@@ -132,8 +137,7 @@ class SServo:
                     elapsed = time.time() - start_time
                     t = min(elapsed / duration, 1.0)  # normalized [0,1]
                     new_angle = initial_angle + t * angle_diff
-                    clamped_angle = max(self.min_angle, min(self.max_angle, round(new_angle)))  # Clamp to valid range
-
+                    clamped_angle = max(self.min_angle, min(self.max_angle, round(new_angle)))  # FIXME: This makes a lot of trouble! It clamps the angle, that it can't complete its movement!
                     self.servo_wrapper.angle = clamped_angle
                     time.sleep(0.01)  # You can tune this for smoothness vs CPU load
 
@@ -163,21 +167,18 @@ class SServo:
         self.servo_thread.join()  # Wait for servo to finish its movement
         self.servo_thread = None  # Clear servo thread
 
-        if not self.start_time:
-            return  # No movement started
+        if not self.start_time: return  # No movement started
         dprint(f"✅ Finished movement of servo ({self.leg}:{self.servo_type}) with servo channel '{self.servo_channel}' took {(time.time() - self.start_time):.2f} seconds")
         self.start_time = None
 
     def clear_thread(self) -> None:
         """Clears the servo thread."""
-        if self.servo_thread:
-            self.servo_thread = None
+        if self.servo_thread: self.servo_thread = None
 
     def interrupt(self) -> None:
         """Interrupts the servo movement if it is running."""
         # Check if a thread exists to interrupt
-        if not self.servo_thread or not self.servo_thread.is_alive():
-            return
+        if not self.servo_thread or not self.servo_thread.is_alive(): return
 
         dprint(f"Interrupting servo ({self.leg}:{self.servo_type}) with servo channel '{self.servo_channel}'")
 
@@ -189,8 +190,5 @@ class SServo:
         dprint(f"Servo (leg={self.leg}, servo_type={self.servo_type}) has been interrupted!")
 
     @validate_types
-    def set_to_normal(self, duration_s: float) -> None:
-        self.set_angle((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
-
-    def get_servo_angle(self) -> int:
-        return self.servo_wrapper.angle
+    def set_to_normal(self, duration_s: float) -> None: self.set_angle((self.adjusted_normal_position - self.deviation), duration_s, nm_action=True)
+    def get_servo_angle(self) -> int: return self.servo_wrapper.angle

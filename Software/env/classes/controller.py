@@ -71,3 +71,9 @@ class Controller:
         "normal", "RESET"
     ]]:
         return self._last_input
+
+    def __del__(self) -> None:
+        if hasattr(self, "controller_sock") and self.controller_sock:
+            self.controller_sock.close()
+        if hasattr(self, "sock") and self.sock:
+            self.sock.close()

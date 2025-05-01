@@ -121,7 +121,6 @@ class Movement:
 
 
     # * Step functions
-    @validate_types
     def _step(self, step_width: float, angles: dict[Literal["left-front", "left-back", "right-front", "right-back"], int], duration: float) -> None:
         duration_single: float = duration / 2
 
