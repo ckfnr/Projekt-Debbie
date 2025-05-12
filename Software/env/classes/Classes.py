@@ -43,10 +43,30 @@ class Coordinate:
     # Coordinate properties
     @property
     def x(self) -> float: return self._x
+    @x.setter
+    def x(self, value: float) -> None:
+        if not isinstance(value, float):
+            raise TypeError(f"X coordinate must be a float, got {type(value)}")
+        self._x = value
+        self.set_hash()
+
     @property
     def y(self) -> float: return self._y
+    @y.setter
+    def y(self, value: float) -> None:
+        if not isinstance(value, float):
+            raise TypeError(f"Y coordinate must be a float, got {type(value)}")
+        self._y = value
+        self.set_hash()
     @property
     def z(self) -> float: return self._z
+
+    @z.setter
+    def z(self, value: float) -> None:
+        if not isinstance(value, float):
+            raise TypeError(f"Z coordinate must be a float, got {type(value)}")
+        self._z = value
+        self.set_hash()
 
     def get_xyz(self) -> tuple[float, float, float]:        return self.x, self.y, self.z
     def get_avg(self) -> float:                             return round((self.x + self.y + self.z) / 3, 6)

@@ -84,7 +84,8 @@ class Leg:
         """Returns a tuple of the three ServoManagers in the leg."""
         return self.all_servos
 
-    def get_current_position(self) -> Coordinate: return self.current_position
+    def get_current_position(self) -> Coordinate:
+        return self.current_position
 
     @validate_types
     def set_to_normal_position(self, duration_s: float = config.servo_default_normalize_speed) -> None:
@@ -110,9 +111,27 @@ class Leg:
         self.thigh.set_angle(target_angle=angles["thigh"], duration=duration_s)
         self.lower_leg.set_angle(target_angle=angles["lower-leg"], duration=duration_s)
         self.side_axis.set_angle(target_angle=angles["side-axis"], duration=duration_s)
+        
+        # Set current position to the new position
+        self.current_position = coordinate
 
     @validate_types
     def set_circle(self, step_width: float, angle: int, max_points: int, duration: float) -> None:
+        """Sets the leg to move in a circular path.
+
+        Args:
+            step_width(float): Step width for each coordinate calculation.
+            angle(int): Angle of the circle in degrees.
+            max_points(int): Maximum number of points to generate for the circle.
+            duration(float): Total duration of the circular motion in seconds.
+
+        Returns:
+            None: No return value.
+
+        Raises:
+            ValueError: If any of the input parameters are invalid.
+            Exception: If an error occurs during thread execution.
+        """
         coords: list[Coordinate] = calc_circle_coordinates(step_width=step_width, angle=angle, max_points=max_points)
         motion_time: float = duration / max_points
 
@@ -124,10 +143,24 @@ class Leg:
                 self.set_to_coordinate(coordinate=coord-Coordinate(x=coord.x/2, y=0.0, z=0.0), duration_s=motion_time)
                 self.start()
                 self.join()
+                
+                # Set current position to the new position
+                self.current_position = coord
 
         self.circle_thread = threading.Thread(target=execute)
 
     def start_circle(self) -> None:
+        """Starts the circle thread.
+
+        Args:
+            self(Circle): Instance of the Circle class.
+
+        Returns:
+            None: No return value.
+
+        Raises:
+            NoThreadError: Raised if no circle thread is set.
+        """
         if self.circle_thread == None: raise NoThreadError("No circle thread set!")
         self.circle_thread.start()
 

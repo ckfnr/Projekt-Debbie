@@ -24,7 +24,6 @@ def run_input_thread(mvmnt: Movement) -> None:
 
             # Main loop to get input from the controller and execute corresponding movement
             while True:
-
                 # Get input from the controller
                 input_command: Optional[Literal["step-backwards", "step-forwards", "turn-left", "turn-right", "sidestep-left", "sidestep-right", "lower", "lift", "normal", "RESET", "HEARTBEAT"]] = ctrllr.last_input
                 elapsed_time_since_heartbeat: float = time.time() - (ctrllr._last_heartbeat if ctrllr._last_heartbeat else 0)
@@ -43,8 +42,8 @@ def run_input_thread(mvmnt: Movement) -> None:
                     reset = True                                                            # Reset the reset flag after executing the command
                     dprint(f"{config.color_green}Finished executing command: {input_command}")
 
+                # If the command is not valid, print an error message
                 if not reset and input_command != "RESET":
-                    # If the command is not valid, print an error message
                     dprint(f"{config.color_red}Invalid command received: {input_command}{config.color_reset}")
 
                 time.sleep(0.1)

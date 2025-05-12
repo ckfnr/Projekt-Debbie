@@ -29,6 +29,24 @@ def _atan(num: float) -> float: return _deg(arctan(num))
 def _sqrt(num: float) -> float: return num ** 0.5
 
 
+'<-- GENERAL CALCULATIONS -->'
+@cached
+@validate_types
+def _add_or_subtract(value: float, add: bool, amount: float, target_value: float) -> float:
+    """Adds or subtracts a value to/from the target value based on the add parameter."""
+    if add:
+        return min(value + amount, target_value)
+    else:
+        return max(value - amount, target_value)
+    
+def add_until_max(value: float, max_value: float) -> float:
+    """Adds a value until it reaches the maximum value."""
+    return _add_or_subtract(value, True, config.step_width, max_value)
+
+def subtract_until_min(value: float, min_value: float) -> float:
+    """Subtracts a value until it reaches the minimum value."""
+    return _add_or_subtract(value, False, config.step_width, min_value)
+
 
 '<-- MOVEMENT CALCULATIONS -->'
 
@@ -99,19 +117,23 @@ def _calc_circle_coordinate(step_width: float, angle: int, point: int, max_point
     return Coordinate(round(x, 6), round(y, 6), round(z, 6))
 
 
-#TODO: This function is not used anywhere in the code. Remove it if not needed.
-@cached
-@validate_types
-def get_nearest_index(coords: list[Coordinate], coord: Coordinate) -> int:
-    """Returns the index of the nearest coordinate in the list."""
-    return min(range(len(coords)), key=lambda i: coords[i].get_difference(coord))
-
-
 '<-- LEG CALCULATIONS -->'
 
 @cached
 @validate_types
 def calc_epsilons(l_ds: float) -> dict[Literal["epsilon-alpha", "epsilon-beta"], float]:
+    """Calculates epsilon-alpha and epsilon-beta angles.
+
+    Args:
+        l_ds(float): Length of the last segment.
+
+    Returns:
+        dict[Literal["epsilon-alpha", "epsilon-beta"], float]: A dictionary containing the calculated epsilon-alpha and epsilon-beta angles.
+
+    Raises:
+        ValueError: If any of the intermediate calculations result in invalid values (e.g., taking the square root of a negative number or acos of a value outside the range [-1, 1]).
+        TypeError: If input parameters are of incorrect type.
+    """
     theta_2e      : float = _acos((config.z_def**2 + config.l_2**2 - config.l_1**2) / (2 * abs(config.z_def) * config.l_2))
     epsilon_alpha : float = 90 - theta_2e
 
@@ -146,7 +168,6 @@ def _get_d_cpsum(y: float) -> float: return config.d_ys + config.d_cpm + (-(conf
 @cached
 @validate_types
 def calc_servo_angles(coordinate: Coordinate) -> dict[Literal["thigh", "lower-leg", "side-axis"], int]:
-    """Calculates the lower_leg, thigh and side_axis servo angles."""
     coordinate.add_xyz_tuple(config.coord_deviation)
 
     # General calculations for servo angles

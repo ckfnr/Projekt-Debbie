@@ -106,126 +106,130 @@ class Config:
 
         # Step settings
         self.max_points : int   =   10  # The maximum amount of points for the circle movement
-        self.step_width : float = 50.0  # The width of the step in mm
+        self.step_width : float = 30.0  # The width of the step in mm
         self.step_height: float = 40.0  # The height of the step in mm
         self.smoothness : float = -0.5  # The smoothness of the circle movement
         self.duration   : float =  0.1  # The duration of the movement in seconds
         self.coord_deviation: tuple[float, float, float] = (0.0, 0.0, 0.0)  # xyz in mm
+        
+        # Movement settings
+        self.max_height: float =  40.0  # The maximum height of the leg in mm
+        self.min_height: float = -30.0  # The minimum height of the leg in mm
+        self.height_step: float =  5.0  # The height of the step in mm
 
         # Step map settings
         # (left_front, left_back, right_front, right_back)
         self.step_map_angles: dict[Literal["step-forward", "step-backward", "sidestep-left", "sidestep-right", "turn-left", "turn-right"], dict[Literal["left-front", "left-back", "right-front", "right-back"], int]] = {
             # Steps
-            "step-forward"  : {"left-front": 0  , "left-back": 0   , "right-front": 0  , "right-back": 0  },
-            "sidestep-right": {"left-front": 90 , "left-back": 90  , "right-front": 270, "right-back": 270},
-            "step-backward" : {"left-front": 180, "left-back": 180 , "right-front": 0  , "right-back": 0  },
-            "sidestep-left" : {"left-front": 270, "left-back": 270 , "right-front": 90 , "right-back": 90 },
+            "step-forward"  : {"left-front":   0, "left-back":   0, "right-front":   0, "right-back":   0},
+            "sidestep-right": {"left-front": 270, "left-back": 270, "right-front": 270, "right-back": 270},
+            "step-backward" : {"left-front": 180, "left-back": 180, "right-front": 180, "right-back": 180},
+            "sidestep-left" : {"left-front":  90, "left-back":  90, "right-front":  90, "right-back":  90},
 
             # Turn left/right
-            "turn-left"     : {"left-front": 270, "left-back": 90  , "right-front": 270, "right-back": 90 },
-            "turn-right"    : {"left-front": 90 , "left-back": 270 , "right-front": 90 , "right-back": 270},
+            "turn-left"     : {"left-front":  90, "left-back": 270, "right-front":  90, "right-back": 270},
+            "turn-right"    : {"left-front": 270, "left-back":  90, "right-front": 270, "right-back":  90},
         }
 
         # Leg settings
-        # All values have to be integer!!!
         self.leg_configuration_rf: LegConfigDict = {
             "channels": {
-                "thigh": 0,
+                "thigh":     0,
                 "lower_leg": 1,
                 "side_axis": 2,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
+                "min_thigh":      60,
+                "max_thigh":     125,
+                "min_lower_leg":  55,
                 "max_lower_leg": 130,
-                "min_side_axis": 70,
+                "min_side_axis":  70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": -12,
-                "lower_leg": 0,
-                "side_axis": 2,
+                "thigh":     -12,
+                "lower_leg":   0,
+                "side_axis":   2,
             },
             "mirrored":{
-                "thigh": False,
+                "thigh":     False,
                 "lower_leg": False,
                 "side_axis": False,
             }
         }
         self.leg_configuration_rb: LegConfigDict = {
             "channels": {
-                "thigh": 8,
-                "lower_leg": 9,
+                "thigh":      8,
+                "lower_leg":  9,
                 "side_axis": 10,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
+                "min_thigh":      60,
+                "max_thigh":     125,
+                "min_lower_leg":  55,
                 "max_lower_leg": 130,
-                "min_side_axis": 70,
+                "min_side_axis":  70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,
+                "thigh":      0,
                 "lower_leg": -3,
-                "side_axis": -20,  # -20
+                "side_axis":  0,
             },
             "mirrored":{
-                "thigh": False,
+                "thigh":     False,
                 "lower_leg": False,
-                "side_axis": True,
+                "side_axis":  True,
             }
         }
         self.leg_configuration_lf: LegConfigDict = {
             "channels": {
-                "thigh": 4,
+                "thigh":     4,
                 "lower_leg": 5,
                 "side_axis": 6,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
+                "min_thigh":      60,
+                "max_thigh":     125,
+                "min_lower_leg":  55,
                 "max_lower_leg": 130,
-                "min_side_axis": 70,
+                "min_side_axis":  70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": 0,        # 12
-                "lower_leg": 0,    # 59  #? Was this negative?
-                "side_axis": -22,  # -22
+                "thigh":      0,
+                "lower_leg":  0,
+                "side_axis": -2,
             },
             "mirrored":{
-                "thigh": True,
-                "lower_leg": True,
-                "side_axis": True,
+                "thigh":      True,
+                "lower_leg":  True,
+                "side_axis": False,
             }
         }
         self.leg_configuration_lb: LegConfigDict = {
             "channels": {
-                "thigh": 12,
+                "thigh":     12,
                 "lower_leg": 13,
                 "side_axis": 14,
             },
             "angles": {
-                "min_thigh": 60,
-                "max_thigh": 125,
-                "min_lower_leg": 55,
+                "min_thigh":      60,
+                "max_thigh":     125,
+                "min_lower_leg":  55,
                 "max_lower_leg": 130,
-                "min_side_axis": 70,
+                "min_side_axis":  70,
                 "max_side_axis": 130,
             },
             "deviations": {
-                "thigh": -3,
-                "lower_leg": -15,
-                "side_axis": 10,
+                "thigh":     -3,
+                "lower_leg": 15,
+                "side_axis": -10,
             },
             "mirrored":{
-                "thigh": True,
+                "thigh":     True,
                 "lower_leg": True,
-                "side_axis": False,
+                "side_axis": True,
             }
         }
 
