@@ -28,4 +28,4 @@ A massive thank you to __Mr. Hühnchen__ for calculating __all the computations_
 
 ## Other Downloads
 You can either download the source code _here on Github_ or from [AJServers](https://downloads.ajservers.site)<br>
-_Path:_ `DebbieV1`
+_Path:_ `Debbie-V1`
