@@ -1,7 +1,5 @@
-import os
 from typing import Any
 
-from pprint import pprint
 
 movement_file: str = "TEST_standup.mmt"
 
@@ -30,8 +28,8 @@ for instruction in converted_data:
         if current_block:  # Only append if there is an active block
             # Check if any part of the instruction is not ok
             if not isinstance(current_block["type"], str):                  raise ValueError(f"Wrong type for 'type'! Got '{type(current_block["type"])}'; expected 'str'!")
-            if not isinstance(current_block["duration"], float):            raise ValueError(f"Wrong type for 'duration'! Got '{type(current_block["duration"])}; exptected 'float'!")
-            if not isinstance(current_block["vectors"], dict):              raise ValueError(f"Wrong type for 'vectors'! Got '{type(current_block["vectors"])}; exptected 'dict'!")
+            if not isinstance(current_block["duration"], float):            raise ValueError(f"Wrong type for 'duration'! Got '{type(current_block["duration"])}; expected 'float'!")
+            if not isinstance(current_block["vectors"], dict):              raise ValueError(f"Wrong type for 'vectors'! Got '{type(current_block["vectors"])}; expected 'dict'!")
             if current_block["type"] != "MOVEMENT":                         raise ValueError(f"The value for 'type' is not 'MOVEMENT'! Got {current_block["type"]} instead.")
             if current_block["duration"] <= 0:                              raise ValueError(f"Wrong type for 'duration'! Got '{type(current_block["duration"])}; expected 'float'!")
             if len(current_block["vectors"]) != 4:                          raise ValueError(f"Too many values for 'vectors'! Got {len(current_block['vectors'])}; expected 4!")

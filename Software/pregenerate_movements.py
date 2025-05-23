@@ -16,7 +16,7 @@ def main() -> None:
         for angle in range(360):
             coords: list[Coordinate] = clctr.get_coordinates(step_width=round(step_width, 1), angle=angle)
             for coord in coords:
-                db.store_coordinates(step_width=round(step_width, 1), angle=angle, coord=coord)
+                db.store_coordinates(step_width=round(float(step_width), 1), angle=angle, coord=coord)
     db.save()
 
     print("Done!")

@@ -1,6 +1,4 @@
 from env.classes.movement import Movement
-from env.classes.leg import Leg
-from env.classes.servos import SServo
 
 m = Movement()
 
