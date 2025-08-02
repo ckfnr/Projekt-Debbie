@@ -2,7 +2,7 @@
 > 🚧 **_Project in Progress!_** – Regular updates are being made.
 
 <p align="center">
-  <img src="./Debbie_preview.jpg" width="350">
+  <img src="./index.png" width="350">
 </p>
 
 ## 📜 **Description**
