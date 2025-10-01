@@ -1,5 +1,4 @@
 # **Debbie**
-> 🚧 **_Project in Progress!_** – Regular updates are being made.
 
 <p align="center">
   <img src="./index.png" width="350">
