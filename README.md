@@ -16,7 +16,7 @@ _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with si
 - [Remote Control](https://github.com/AJ-Holzer/Debbie-V1---Keyboard)
 
 ## 👀 Check out
-### ⚙ Hardware-Development & Design:
+### ⚙ Hardware-Development, Design & Organization:
 - [Cesario Kufner](https://github.com/ckfnr)
 ### 💻 Programming:
 - [AJ-Holzer](https://github.com/AJ-Holzer)
