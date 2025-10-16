@@ -18,9 +18,10 @@ _Debbie_ is a straightforward yet fascinating quadrupedal robot designed with si
 ## 👀 Check out
 ### ⚙ Hardware-Development & Design:
 - [Cesario Kufner](https://github.com/ckfnr)
-- [Louati Momen](https://github.com/louatimomen)
 ### 💻 Programming:
 - [AJ-Holzer](https://github.com/AJ-Holzer)
+### Documentation:
+- [Louati Momen](https://github.com/louatimomen)
 ### Huge Shoutout to [Mr. Hühnchen](https://github.com/MrHuehnchen)! 🎉
 A massive thank you to __Mr. Hühnchen__ for calculating __all the computations__ for Debbie!<br>
 💡⚡
